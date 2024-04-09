@@ -283,10 +283,10 @@ def show_cost(cost, sc: pygame.Surface):
     font = pygame.font.SysFont("Arial", 20)
 
     # Tạo text hiển thị chi phí
-    text = font.render(f"Cost: {cost:.2f}", True, BLACK)
+    text = font.render(f"Cost: {cost:.2f}", True, WHITE)
 
     # Vẽ text lên màn hình
-    sc.blit(text, (10, 10))
+    sc.blit(text, (10, 0))
 
     # Cập nhật màn hình
     pygame.display.flip()
