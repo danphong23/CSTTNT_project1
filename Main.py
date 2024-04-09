@@ -12,9 +12,9 @@ from PathFinder import *
 def Function_Search(g: Grid, sc: pygame.Surface):
     # test ở đây, 
     # DFS(g, sc)
-    BFS(g, sc)
+    #BFS(g, sc)
     # UCS(g, sc)
-    # AStar
+    AStar(g, sc)
     
 
 def main(data):

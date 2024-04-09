@@ -83,7 +83,77 @@ def UCS(g: Grid, sc: pygame.Surface):
 
 # Tìm kiếm A* (A-Star) 
 def AStar(g: Grid, sc: pygame.Surface):
-    pass
+    start_id = g.Start.id # lấy id của ô bắt đầu
+    goal_id = g.Goal.id # lấy id của ô kết thúc
+
+    # Tạo một map để lưu trữ các ô theo id
+    cell_dict = {cell.id: cell for cell in g.Grid_cells}
+    start_cell = cell_dict[start_id]
+    goal_cell = cell_dict[goal_id]
+
+    # Khởi tạo open set với hàng đợi ưu tiên
+    open_set = []
+    heapq.heappush(open_set, (0, start_id))
+
+    # Lưu vết đường đi
+    came_from = [-1] * g.get_num_cells()
+
+    # Khởi tạo giá trị g_score và f_score cho mỗi ô
+    g_score = {cell_id: float("inf") for cell_id in cell_dict}
+    g_score[start_id] = 0
+    f_score = {cell_id: float("inf") for cell_id in cell_dict}
+    f_score[start_id] = h(start_cell, goal_cell)
+
+    # Khởi tạo danh sách các ô đã thăm dò
+    closed_set = set()
+
+    while open_set:
+        # Lấy ô có f_score nhỏ nhất trong open set
+        _, current_id = heapq.heappop(open_set)
+        current_cell = cell_dict[current_id]
+
+        # Nếu ô hiện tại là đích
+        if current_id == goal_id:
+            path = find_path(came_from, goal_id)
+            draw_path(g, sc, path, YELLOW)
+            cost = calculate_cost(g, path)
+            show_cost(cost, sc)
+            return
+
+        # Thêm ô hiện tại vào tập đã thăm dò
+        closed_set.add(current_id)
+
+        # Xem xét các ô lân cận
+        for neighbor in g.get_neighbors(current_cell):
+            neighbor_id = neighbor.id
+            if neighbor_id in closed_set:
+                continue
+
+            if current_cell.rect.x == neighbor.rect.x or current_cell.rect.y == neighbor.rect.y:
+                cost = CELL_SIZE + CELL_SPACING
+            else:
+                cost = math.sqrt(2) * (CELL_SIZE + CELL_SPACING)
+            # Tính giá trị g_score mới
+            tentative_g_score = g_score[current_id] + cost
+
+            # Nếu ô lân cận có giá trị g_score mới tốt hơn hoặc chưa thăm dò
+            is_opened = any(id == neighbor_id for _, id in open_set)
+            if tentative_g_score < g_score[neighbor_id] or not is_opened:
+                # Cập nhật thông tin của ô lân cận
+                came_from[neighbor_id] = current_id
+                g_score[neighbor_id] = tentative_g_score
+                f_score[neighbor_id] = g_score[neighbor_id] + h(cell_dict[neighbor_id], goal_cell)
+                # Thêm ô lân cận vào open set
+                if not is_opened:
+                    heapq.heappush(open_set, (f_score[neighbor_id], neighbor_id))
+                else: 
+                    index = next((i for i, (_, id) in enumerate(open_set) if id == neighbor_id), None)
+                    if index is not None:
+                        open_set[index] = (f_score[neighbor_id], neighbor_id)
+                        heapq.heapify(open_set)
+
+    # Nếu không tìm được đường đi
+    print("Không tìm được đường đi")
 
 # hàm tìm danh sách thứ tự đường đi từ đầu đến đích
 def find_path(father, node_id):
@@ -112,7 +182,11 @@ def draw_path(g: Grid, sc: pygame.Surface, path, color):
 
 # hàm trả về khoảng cách giữa 2 cell (chi phí heuristic)
 def h(n: Cell, goal: Cell):
-    return math.sqrt((n.rect.x - goal.rect.x)**2 + (n.rect.y - goal.rect.y)**2)
+    n_center_x = n.rect.x + CELL_SIZE / 2
+    n_center_y = n.rect.y + CELL_SIZE / 2
+    goal_center_x = goal.rect.x + CELL_SIZE / 2
+    goal_center_y = goal.rect.y + CELL_SIZE / 2
+    return math.sqrt((n_center_x - goal_center_x)**2 + (n_center_y - goal_center_y)**2)
 
 # hàm tìm chi phí đường đi từ đầu đến đích
 def calculate_cost(g:Grid, path):
