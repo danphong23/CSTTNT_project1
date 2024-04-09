@@ -6,7 +6,7 @@ class InputData:
         self.Num_Hight = 0  # kích thước cao (nếu có)
         self.Start = (0, 0)  # tọa độ điểm bắt đầu (x1, y1)
         self.Goal = (0, 0)  # tọa độ điểm kết thúc (x2, y2)
-        self.Pickup_Points = []  # danh sách tọa độ các điểm đón ([x1,y1, x2,y2,…]) (nếu có)
+        self.Pickup_Points = []  # danh sách tọa độ các điểm đón ([(x1,y1), (x2,y2),…]) (nếu có)
         self.Polygons = []  # danh sách các danh sách các tọa độ điểm của đa giác 
                             # [[(x1,y1), (x2, y2), (x3, y3),...], [(x1,y1), (x2, y2), (x3, y3),...],... ]
         self.SCREEN_WIDTH = (self.Num_Cols * CELL_SIZE) + 2 * FRAME_THICKNESS + (self.Num_Cols - 1) * CELL_SPACING  # Chiều rộng của màn hình

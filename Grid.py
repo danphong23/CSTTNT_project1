@@ -39,12 +39,12 @@ class Grid:
         self.Goal._set_color(BLUE)
 
         # Xác Định các điểm đón nếu có
-        for i in range(0, len(input.Pickup_Points), 2):
-            x = input.Pickup_Points[i]
-            y = input.Pickup_Points[i + 1]
+        for p in input.Pickup_Points:
+            x = p[0]
+            y = p[1]
             id = x + y * self.width
             cell:Cell = self.Grid_cells[id]
-            cell._set_color(BLUE)
+            cell._set_color(PURPLE)
             pickup_points.append(cell)
 
         # Tạo danh sách các đa giác
