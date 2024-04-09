@@ -6,7 +6,7 @@ from Grid import *
 from Cell import *
 import heapq
 
-# tìm kiếm theo chiều rộng
+# tìm kiếm theo chiều rộng trả về danh sách đường đi
 def BFS(g: Grid, sc: pygame.Surface):
     """Thực hiện thuật toán BFS trên lưới g."""
 
@@ -21,14 +21,8 @@ def BFS(g: Grid, sc: pygame.Surface):
         if g.is_goal(current):  # Nếu đã đến đích
             # tìm danh sách các cell trên đường đi
             path = find_path(father, g.Goal.id)
-            draw_path(g, sc, path, YELLOW)  # Vẽ đường đi
-            # tính chi phí đường đi
-            cost = calculate_cost(g, path)
 
-            # vẽ chi phí lên màn hình
-            show_cost(cost, sc)
-            
-            return
+            return path
 
         closed_set.append(current_id)  # Đánh dấu ô đã thăm dò
 
@@ -40,8 +34,9 @@ def BFS(g: Grid, sc: pygame.Surface):
                 father[neighbor_id] = current_id  # Lưu vết đường đi
 
     print("Không tìm được đường đi")  # Nếu không tìm ra đích
+    return []
 
-# Tìm kiếm theo chiều sâu
+# Tìm kiếm theo chiều sâu trả về danh sách đường đi
 def DFS(g: Grid, sc: pygame.Surface):
     """Thực hiện thuật toán DFS trên lưới g."""
 
@@ -56,14 +51,8 @@ def DFS(g: Grid, sc: pygame.Surface):
         if g.is_goal(current):  # Nếu đã đến đích
             # tìm danh sách các cell trên đường đi
             path = find_path(father, g.Goal.id)
-            draw_path(g, sc, path, YELLOW)  # Vẽ đường đi
-            # tính chi phí đường đi
-            cost = calculate_cost(g, path)
-
-            # vẽ chi phí lên màn hình
-            show_cost(cost, sc)
             
-            return
+            return path
 
         closed_set.append(current_id)  # Đánh dấu ô đã thăm dò
 
@@ -75,9 +64,10 @@ def DFS(g: Grid, sc: pygame.Surface):
                 father[neighbor_id] = current_id  # Lưu vết đường đi
 
     print("Không tìm được đường đi")  # Nếu không tìm ra đích
+    return []
 
 
-# Tìm kiếm đồng nhất (UCS - Uniform Cost Search) 
+# Tìm kiếm đồng nhất (UCS - Uniform Cost Search) trả về danh sách đường đi
 def UCS(g: Grid, sc: pygame.Surface):
     # Lấy ID của ô bắt đầu và ô kết thúc
     start_id = g.Start.id
@@ -108,10 +98,8 @@ def UCS(g: Grid, sc: pygame.Surface):
         # Nếu nút hiện tại là đích, vẽ đường đi
         if current_id == goal_id:
             path = find_path(came_from, goal_id)
-            draw_path(g, sc, path, YELLOW)
-            cost = calculate_cost(g, path)
-            show_cost(cost, sc)
-            return
+            
+            return path
 
         closed_set.add(current_id)  # Thêm nút hiện tại vào tập đã thăm
 
@@ -135,9 +123,10 @@ def UCS(g: Grid, sc: pygame.Surface):
 
     # Nếu không tìm thấy đường đi, in thông báo
     print("Không tìm được đường đi")
+    return []
 
 
-# Tìm kiếm A* (A-Star) 
+# Tìm kiếm A* (A-Star) trả về danh sách đường đi
 def AStar(g: Grid, sc: pygame.Surface):
     start_id = g.Start.id # lấy id của ô bắt đầu
     goal_id = g.Goal.id # lấy id của ô kết thúc
@@ -171,10 +160,8 @@ def AStar(g: Grid, sc: pygame.Surface):
         # Nếu ô hiện tại là đích
         if current_id == goal_id:
             path = find_path(came_from, goal_id)
-            draw_path(g, sc, path, YELLOW)
-            cost = calculate_cost(g, path)
-            show_cost(cost, sc)
-            return
+
+            return path
 
         # Thêm ô hiện tại vào tập đã thăm dò
         closed_set.add(current_id)
@@ -210,6 +197,17 @@ def AStar(g: Grid, sc: pygame.Surface):
 
     # Nếu không tìm được đường đi
     print("Không tìm được đường đi")
+    return []
+
+
+# hàm trả về khoảng cách giữa 2 cell (chi phí heuristic)
+def h(n: Cell, goal: Cell):
+    n_center_x = n.rect.x + CELL_SIZE / 2
+    n_center_y = n.rect.y + CELL_SIZE / 2
+    goal_center_x = goal.rect.x + CELL_SIZE / 2
+    goal_center_y = goal.rect.y + CELL_SIZE / 2
+    return math.sqrt((n_center_x - goal_center_x)**2 + (n_center_y - goal_center_y)**2)
+
 
 # hàm tìm danh sách thứ tự đường đi từ đầu đến đích
 def find_path(father, node_id):
@@ -223,26 +221,13 @@ def find_path(father, node_id):
 
     return path
 
+# *** các hàm từ chỗ này xuống dưới chưa biết nên đặt ở file nào nên đặt tạm ở đây
 # hàm vẽ đường đi từ đầu đến đích
 def draw_path(g: Grid, sc: pygame.Surface, path, color):
-    # Tìm đường đi từ ô kết thúc đến ô bắt đầu
-    g.Start._set_color(GREEN)
-    g.Start.draw(sc)
-    g.Goal._set_color(BLUE)
-    g.Goal.draw(sc)
-
     # Vẽ đường đi trên màn hình
     for i in path[1:len(path)-1]:
         cell:Cell = g.Grid_cells[i]
         cell.set_color(color, sc, 15)
-
-# hàm trả về khoảng cách giữa 2 cell (chi phí heuristic)
-def h(n: Cell, goal: Cell):
-    n_center_x = n.rect.x + CELL_SIZE / 2
-    n_center_y = n.rect.y + CELL_SIZE / 2
-    goal_center_x = goal.rect.x + CELL_SIZE / 2
-    goal_center_y = goal.rect.y + CELL_SIZE / 2
-    return math.sqrt((n_center_x - goal_center_x)**2 + (n_center_y - goal_center_y)**2)
 
 # hàm tìm chi phí đường đi từ đầu đến đích
 def calculate_cost(g:Grid, path):

@@ -91,7 +91,7 @@ class Grid:
         x = cell.id % self.width
         y = cell.id // self.width
 
-        directions = [(0,1), (0,-1), (-1,0), (1,0), (-1,1), (-1,-1), (1,1), (1,-1)]
+        directions = [(0,1), (0,-1), (1,0), (-1,0), (-1,1), (-1,-1), (1,1), (1,-1)]
         # directions = [(0,1), (0,-1), (-1,0), (1,0)]
         
         neighbors = []

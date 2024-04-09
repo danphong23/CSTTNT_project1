@@ -10,11 +10,21 @@ from PathFinder import *
 
 # test chức năng tìm đường đi
 def Function_Search(g: Grid, sc: pygame.Surface):
+    path = []
     # test ở đây, 
-    # DFS(g, sc)
-    #BFS(g, sc)
-    UCS(g, sc)
-    # AStar(g, sc)
+    # path = DFS(g, sc)
+    # path = BFS(g, sc)
+    # path = UCS(g, sc)
+    path = AStar(g, sc)
+
+    # thực hiện vẽ đường đi ở đây
+    draw_path(g, sc, path, YELLOW)  # Vẽ đường đi
+    # tính chi phí đường đi
+    cost = calculate_cost(g, path)
+
+    # vẽ chi phí lên màn hình
+    show_cost(cost, sc)
+    
     
 
 def main(data):

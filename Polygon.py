@@ -5,7 +5,7 @@ from Polygon import *
 import math
 
 # ***********************************************************************************************************
-# MỨC 3: khi thực hiện di chuyển đa giác thì chỉ cần di chuyển các đỉnh đa giác sau đó vẽ lại đa giác
+# MỨC 4: khi thực hiện di chuyển đa giác thì chỉ cần di chuyển các đỉnh đa giác sau đó vẽ lại đa giác
 # Lưu ý: khi các đa giác di chuyển thì phải đặt lại thuộc tính passable của các cell thuộc đa giác trước
 #        khi di chuyển là True sau đó mới di chuyển và đặt các thuộc tính passable của các cell 
 #        thuộc đa giác sau khi di chuyển là False
