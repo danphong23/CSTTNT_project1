@@ -137,9 +137,6 @@ def UCS(g: Grid, sc: pygame.Surface):
     print("Không tìm được đường đi")
 
 
-
-
-
 # Tìm kiếm A* (A-Star) 
 def AStar(g: Grid, sc: pygame.Surface):
     start_id = g.Start.id # lấy id của ô bắt đầu
