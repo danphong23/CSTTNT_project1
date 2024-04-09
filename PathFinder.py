@@ -41,9 +41,41 @@ def BFS(g: Grid, sc: pygame.Surface):
 
     print("Không tìm được đường đi")  # Nếu không tìm ra đích
 
-# tìm kiếm theo chiều sâu
+# Tìm kiếm theo chiều sâu
 def DFS(g: Grid, sc: pygame.Surface):
-    pass
+    """Thực hiện thuật toán DFS trên lưới g."""
+
+    open_stack = [g.Start.id]  # Stack chứa các ô cần thăm dò
+    closed_set = []  # Tập hợp các ô đã thăm dò (dùng set để kiểm tra nhanh hơn)
+    father = [-1] * g.get_num_cells()  # Lưu vết đường đi
+
+    while open_stack:
+        current_id = open_stack.pop()  # Lấy ô cuối cùng trong stack
+        current = g.Grid_cells[current_id]
+
+        if g.is_goal(current):  # Nếu đã đến đích
+            # tìm danh sách các cell trên đường đi
+            path = find_path(father, g.Goal.id)
+            draw_path(g, sc, path, YELLOW)  # Vẽ đường đi
+            # tính chi phí đường đi
+            cost = calculate_cost(g, path)
+
+            # vẽ chi phí lên màn hình
+            show_cost(cost, sc)
+            
+            return
+
+        closed_set.append(current_id)  # Đánh dấu ô đã thăm dò
+
+        neighbors = g.get_neighbors(current)
+        for neighbor in neighbors:  # Xem xét các ô lân cận
+            neighbor_id = neighbor.id
+            if neighbor_id not in open_stack and neighbor_id not in closed_set:
+                open_stack.append(neighbor_id)  # Thêm ô lân cận chưa thăm dò vào stack
+                father[neighbor_id] = current_id  # Lưu vết đường đi
+
+    print("Không tìm được đường đi")  # Nếu không tìm ra đích
+
 
 # Tìm kiếm đồng nhất (UCS - Uniform Cost Search) 
 def UCS(g: Grid, sc: pygame.Surface):
