@@ -79,7 +79,66 @@ def DFS(g: Grid, sc: pygame.Surface):
 
 # Tìm kiếm đồng nhất (UCS - Uniform Cost Search) 
 def UCS(g: Grid, sc: pygame.Surface):
-    pass
+    # Lấy ID của ô bắt đầu và ô kết thúc
+    start_id = g.Start.id
+    goal_id = g.Goal.id
+
+    # Tạo một dict để lưu trữ các ô dựa trên ID
+    cell_dict = {cell.id: cell for cell in g.Grid_cells}
+    start_cell = cell_dict[start_id]
+    goal_cell = cell_dict[goal_id]
+
+    # Khởi tạo open set - hàng đợi ưu tiên - với nút bắt đầu
+    open_set = [(0, start_id)]
+    heapq.heapify(open_set)
+
+    # Các biến lưu trữ nút đã thăm và chi phí:
+    came_from = [-1] * g.get_num_cells()  # Lưu trữ nút cha cho mỗi ô
+    g_score = {cell_id: float("inf") for cell_id in cell_dict}  # Lưu trữ chi phí của mỗi ô
+    g_score[start_id] = 0  # Chi phí của ô bắt đầu = 0
+
+    # Khởi tạo tập lưu trữ các nút đã thăm
+    closed_set = set()
+
+    # Vòng lặp chính cho thuật toán UCS:
+    while open_set:
+        _, current_id = heapq.heappop(open_set)  # Lấy ra nút có chi phí thấp nhất
+        current_cell = cell_dict[current_id]  
+
+        # Nếu nút hiện tại là đích, vẽ đường đi
+        if current_id == goal_id:
+            path = find_path(came_from, goal_id)
+            draw_path(g, sc, path, YELLOW)
+            cost = calculate_cost(g, path)
+            show_cost(cost, sc)
+            return
+
+        closed_set.add(current_id)  # Thêm nút hiện tại vào tập đã thăm
+
+        # Khám phá các ô lân cận của nút hiện tại
+        for neighbor in g.get_neighbors(current_cell):
+            neighbor_id = neighbor.id
+            if neighbor_id in closed_set:
+                continue  # Bỏ qua nếu ô lân cận đã được thăm
+
+            # Tính toán chi phí để đến ô lân cận
+            #cost: khoảng cách Euclid từ ô hiện tại đến ô lân cận
+            cost = CELL_SIZE + CELL_SPACING if current_cell.rect.x == neighbor.rect.x or current_cell.rect.y == neighbor.rect.y else math.sqrt(2) * (CELL_SIZE + CELL_SPACING)
+            #tentative_g_score: tổng khoảng cách g_score từ ô đầu đến ô hiện tại
+            tentative_g_score = g_score[current_id] + cost 
+
+            # Cập nhật thông tin nếu đường đến ô lân cận tốt hơn
+            if tentative_g_score < g_score[neighbor_id]:
+                came_from[neighbor_id] = current_id  # Cập nhật ô cha của ô lân cận
+                g_score[neighbor_id] = tentative_g_score  # Cập nhật chi phí để đến ô lân cận
+                heapq.heappush(open_set, (g_score[neighbor_id], neighbor_id))  # Thêm lân cận vào open set
+
+    # Nếu không tìm thấy đường đi, in thông báo
+    print("Không tìm được đường đi")
+
+
+
+
 
 # Tìm kiếm A* (A-Star) 
 def AStar(g: Grid, sc: pygame.Surface):
