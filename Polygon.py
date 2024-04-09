@@ -4,6 +4,16 @@ from Cell import Cell
 from Polygon import *
 import math
 
+# ***********************************************************************************************************
+# MỨC 3: khi thực hiện di chuyển đa giác thì chỉ cần di chuyển các đỉnh đa giác sau đó vẽ lại đa giác
+# Lưu ý: khi các đa giác di chuyển thì phải đặt lại thuộc tính passable của các cell thuộc đa giác trước
+#        khi di chuyển là True sau đó mới di chuyển và đặt các thuộc tính passable của các cell 
+#        thuộc đa giác sau khi di chuyển là False
+# *** có thể viết 1 hàm thực hiện việc di chuyển đa giác sau đó thực hiện gọi đa 
+#       nhiệm để không ảnh hưởng đến chương trình
+# *** vấn đề là có sự ảnh hưởng của tốc độ di chuyển (delay) của nhân vật tìm đường, tốc độ di chuyển của các đa giác
+# *** di chuyển đa giác tới lui thì dễ nhưng thuật toán chạy đúng
+# ***********************************************************************************************************
 
 # ta chỉ xét đa giác lồi
 class Polygon:
@@ -21,7 +31,7 @@ class Polygon:
         self.height = len(Grid_cell)//width
 
         # chứa tất cả các điểm thuộc đa giác
-        self.points_in_polygon = []
+        # self.points_in_polygon = []
 
         # khởi tạo các đỉnh
         self.init_edge(Grid_cell)
