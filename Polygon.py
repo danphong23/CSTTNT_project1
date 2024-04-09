@@ -20,6 +20,17 @@ class Polygon:
         self.width = width # số cột
         self.height = len(Grid_cell)//width
 
+        # chứa tất cả các điểm thuộc đa giác
+        self.points_in_polygon = []
+
+        # khởi tạo các đỉnh
+        self.init_edge(Grid_cell)
+
+        # đặt các cell trong đa giác là không đi qua được 
+        self.set_passable_polygon(Grid_cell)
+
+    # hàm khởi tạo các cạnh của đa giác
+    def init_edge(self, Grid_cell):
         # đặt các điểm trên đa giác là không đi qua được và đổi màu
         for point in self.points:
             x, y = point
@@ -46,8 +57,6 @@ class Polygon:
             Grid_cell[id].set_passable(False)
             Grid_cell[id]._set_color(BLACK)
 
-        # đặt các cell trong đa giác là không đi qua được 
-        self.set_passable_polygon(Grid_cell)
 
                 
     # hàm xác định danh sách các id Cell nằm trên đưởng thẳng nối 2 điểm A, B
