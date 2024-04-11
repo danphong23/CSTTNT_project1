@@ -32,7 +32,7 @@ def main(data):
     pygame.display.set_caption(f'project1')
     sc = pygame.display.set_mode((data.SCREEN_WIDTH,data.SCREEN_HEIGHT))
     clock = pygame.time.Clock()
-    sc.fill(pygame.color.Color(GREY))
+    sc.fill(pygame.color.Color(BLACK))
     pygame.display.flip()
     
     space = Grid(data)

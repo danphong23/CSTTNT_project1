@@ -16,21 +16,18 @@ class Grid:
         self.width = input.Num_Cols
         self.height = input.Num_Rows
         self.cell_size = input.Num_Cols*input.Num_Rows
-        self.Grid_cells = []  # Danh sách các ô vuông
         self.Start = None  # Ô bắt đầu (S)
         self.Goal = None  # Ô kết thúc (G)
         pickup_points = [] # danh sách các điểm đón
         # self.Polygons = []  # Danh sách các đa giác
+        
+        # tạo danh sách các ô vuông ở viền grid
+        self.wall_cells = []
+        self.init_wall()
 
         # Tạo danh sách các ô vuông
-        for i in range(self.height):
-            for j in range(self.width):
-                # j*(A+A1)+BOUND, i*(A+A1)+BOUND, A, i*COLS+j, is_brick
-                x = j * (CELL_SIZE + CELL_SPACING) + FRAME_THICKNESS
-                y = (self.height -1 - i) * (CELL_SIZE + CELL_SPACING) + FRAME_THICKNESS
-                id = j + i * self.width 
-                cell = Cell(x, y, CELL_SIZE, id)
-                self.Grid_cells.append(cell)
+        self.Grid_cells = []  # Danh sách các ô vuông
+        self.init_grid_cells()
 
         # Xác định ô bắt đầu và kết thúc
         self.Start:Cell = self.Grid_cells[input.Start[0] + input.Start[1] * self.width]
@@ -50,6 +47,43 @@ class Grid:
         # Tạo danh sách các đa giác
         self.Polygons = List_Polygon(input.Polygons, self.Grid_cells, self.width)
 
+    # khởi tạo các ô trong grid
+    def init_grid_cells(self):
+        for i in range(self.height):
+            for j in range(self.width):
+                # j*(A+A1)+BOUND, i*(A+A1)+BOUND, A, i*COLS+j, is_brick
+                x = j * (CELL_SIZE + CELL_SPACING) + FRAME_THICKNESS
+                y = (self.height -1 - i) * (CELL_SIZE + CELL_SPACING) + FRAME_THICKNESS
+                id = j + i * self.width 
+                cell = Cell(x, y, CELL_SIZE, id)
+                self.Grid_cells.append(cell)
+    # khởi tạo tường
+    def init_wall(self):
+        for i in range(self.height + 2):
+            id = -1
+            # tường bên trái màn hình
+            y = i * (CELL_SIZE + CELL_SPACING)
+            cell = Cell(0, y, CELL_SIZE, id)
+            cell._set_color(GREY)
+            self.wall_cells.append(cell)
+            # tường bên phải màn hình
+            y = i * (CELL_SIZE + CELL_SPACING)
+            cell = Cell(self.width * (CELL_SIZE + CELL_SPACING) + FRAME_THICKNESS, y, CELL_SIZE, id)
+            cell._set_color(GREY)
+            self.wall_cells.append(cell)
+        for i in range(self.width):
+            id = -1
+            # tường bên trên màn hình
+            x = i * (CELL_SIZE + CELL_SPACING) + FRAME_THICKNESS
+            cell = Cell(x, 0, CELL_SIZE, id)
+            cell._set_color(GREY)
+            self.wall_cells.append(cell)
+            # tường bên dưới màn hình
+            x = i * (CELL_SIZE + CELL_SPACING) + FRAME_THICKNESS
+            cell = Cell(x, self.height * (CELL_SIZE + CELL_SPACING) + FRAME_THICKNESS, CELL_SIZE, id)
+            cell._set_color(GREY)
+            self.wall_cells.append(cell)
+
     def draw(self, screen: pygame.Surface) -> None:
         """
         Vẽ các ô lưới, đa giác, điểm bắt đầu, điểm kết thúc, các điểm đón lên màn hình.
@@ -58,6 +92,8 @@ class Grid:
             screen: Màn hình pygame để vẽ.
         """
         for cell in self.Grid_cells:
+            cell.draw(screen)
+        for cell in self.wall_cells:
             cell.draw(screen)
 
         pygame.display.flip()
