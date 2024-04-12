@@ -151,7 +151,9 @@ if __name__=='__main__':
     # Đọc dữ liệu từ Input.txt
     data = InputData()
     data.readInput("input.txt")
+    #data.readInput("input_level_4.txt")
     data.printData()
 
-    #main(data)
-    main_level_4(data)
+    main(data)
+    #main_level_4(data)
+    # nhớ sửa lại kích thước Cell trong Const trước khi test
