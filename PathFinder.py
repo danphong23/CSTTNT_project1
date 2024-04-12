@@ -225,9 +225,12 @@ def find_path(father, node_id):
 # hàm vẽ đường đi từ đầu đến đích
 def draw_path(g: Grid, sc: pygame.Surface, path, color):
     # Vẽ đường đi trên màn hình
-    for i in path[1:len(path)-1]:
+    for i in path:
         cell:Cell = g.Grid_cells[i]
-        cell.set_color(color, sc, 15)
+        # khúc này không tối ưu lắm
+        # nếu ô này không có gì thì mới tô màu
+        if cell.color == WHITE:
+            cell.set_color(color, sc, 15)
 
 def clear_path(g: Grid, sc: pygame.Surface, path):
     # Xóa đường đi trên màn hình
