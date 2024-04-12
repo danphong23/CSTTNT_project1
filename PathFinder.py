@@ -111,7 +111,7 @@ def UCS(g: Grid, Start: Cell, Goal: Cell):
 
             # Tính toán chi phí để đến ô lân cận
             #cost: khoảng cách Euclid từ ô hiện tại đến ô lân cận
-            cost = CELL_SIZE + CELL_SPACING if current_cell.rect.x == neighbor.rect.x or current_cell.rect.y == neighbor.rect.y else math.sqrt(2) * (CELL_SIZE + CELL_SPACING)
+            cost = CELL_SIZE if current_cell.rect.x == neighbor.rect.x or current_cell.rect.y == neighbor.rect.y else math.sqrt(2) * CELL_SIZE
             #tentative_g_score: tổng khoảng cách g_score từ ô đầu đến ô hiện tại
             tentative_g_score = g_score[current_id] + cost 
 
@@ -173,9 +173,9 @@ def AStar(g: Grid, Start: Cell, Goal: Cell):
                 continue
 
             if current_cell.rect.x == neighbor.rect.x or current_cell.rect.y == neighbor.rect.y:
-                cost = CELL_SIZE + CELL_SPACING
+                cost = CELL_SIZE 
             else:
-                cost = math.sqrt(2) * (CELL_SIZE + CELL_SPACING)
+                cost = math.sqrt(2) * CELL_SIZE
             # Tính giá trị g_score mới
             tentative_g_score = g_score[current_id] + cost
 
