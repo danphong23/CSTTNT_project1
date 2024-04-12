@@ -3,6 +3,7 @@ from Const import *
 from Cell import Cell
 from Polygon import *
 import math
+import random
 
 # ***********************************************************************************************************
 # MỨC 4: khi thực hiện di chuyển đa giác thì chỉ cần di chuyển các đỉnh đa giác sau đó vẽ lại đa giác
@@ -29,6 +30,11 @@ class Polygon:
         self.color = GREY
         self.width = width # số cột
         self.height = len(Grid_cell)//width
+        self.velocity = [0, random.choice([-1, 1])] # vận tốc di chuyển của đa giác
+        self.inside_points_ids = [] # id các cell nằm trong đa giác
+        self.grid_cell = Grid_cell # danh sách các cell trên lưới
+        self.unsafe_points = [] # id các cell không an toàn
+        self.poly_width = 0 # chiều rộng của đa giác
 
         # chứa tất cả các điểm thuộc đa giác
         # self.points_in_polygon = []
@@ -37,7 +43,9 @@ class Polygon:
         self.init_edge(Grid_cell)
 
         # đặt các cell trong đa giác là không đi qua được 
-        self.set_passable_polygon(Grid_cell)
+        self.set_passable_polygon(Grid_cell, False)
+
+        self.calculate_width()
 
     # hàm khởi tạo các cạnh của đa giác
     def init_edge(self, Grid_cell):
@@ -46,6 +54,7 @@ class Polygon:
             x, y = point
             Grid_cell[x + y*self.width].set_passable(False)
             Grid_cell[x + y*self.width]._set_color(RED)
+            self.inside_points_ids.append(x + y*self.width)
 
 
         # lấy các đường thẳng nối các điểm
@@ -58,6 +67,8 @@ class Polygon:
             for id in points_in_line:
                 Grid_cell[id].set_passable(False)
                 Grid_cell[id]._set_color(self.color)
+                self.inside_points_ids.append(id)
+                
 
         # lấy đường thẳng nối điểm cuối với điểm đầu
         A = self.points[-1] # điểm cuối danh sách
@@ -66,9 +77,9 @@ class Polygon:
         for id in points_in_line:
             Grid_cell[id].set_passable(False)
             Grid_cell[id]._set_color(self.color)
+            self.inside_points_ids.append(id)
 
 
-                
     # hàm xác định danh sách các id Cell nằm trên đưởng thẳng nối 2 điểm A, B
     def points_in_line(self, A, B):
         """
@@ -114,7 +125,7 @@ class Polygon:
         return lines
 
     #  thuật toán Flood Fill 
-    def set_passable_polygon(self, Grid_cell):
+    def set_passable_polygon(self, Grid_cell, value):
         """
         Set passable các cell nằm trong đa giác là False.
 
@@ -137,7 +148,7 @@ class Polygon:
             x = seed % self.width
             y = seed // self.width
 
-            if Grid_cell[x + y * self.width].passable:
+            if Grid_cell[x + y * self.width].passable is not value:
                 queue.append((x, y))
                 break
 
@@ -145,12 +156,13 @@ class Polygon:
         while len(queue) > 0:
             # Lấy điểm đầu tiên trong danh sách cần kiểm tra
             point = queue.pop(0)
-            if not Grid_cell[point[0] + point[1] * self.width].passable:
+            if Grid_cell[point[0] + point[1] * self.width].passable is not value:
                 continue
 
             # Đánh dấu điểm đã được thăm
-            Grid_cell[point[0] + point[1] * self.width].set_passable(False)
-            # Grid_cell[point[0] + point[1] * self.width]._set_color(BLACK)
+            Grid_cell[point[0] + point[1] * self.width].set_passable(value)
+            self.inside_points_ids.append(point[0] + point[1] * self.width)
+            #Grid_cell[point[0] + point[1] * self.width]._set_color(BLACK)
 
             # Kiểm tra các điểm lân cận
             for dx, dy in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
@@ -158,9 +170,165 @@ class Polygon:
                 y = point[1] + dy
 
                 # Kiểm tra điểm lân cận có nằm trong đa giác hay không
-                if 0 <= x < self.width and 0 <= y < self.height and Grid_cell[x + y * self.width].passable:
+                if 0 <= x < self.width and 0 <= y < self.height and Grid_cell[x + y * self.width].passable is not value:
                     # Thêm điểm lân cận vào danh sách cần kiểm tra
                     queue.append((x, y))
+
+    def reset_polygon(self):
+        for id in self.inside_points_ids:
+            self.grid_cell[id].set_passable(True)
+            self.grid_cell[id]._set_color(WHITE)
+        
+        for point in self.points:
+            x, y = point
+            self.grid_cell[x + y*self.width].set_passable(True)
+            self.grid_cell[x + y*self.width]._set_color(WHITE)
+
+        self.set_passable_polygon(self.grid_cell, True)
+        self.inside_points_ids = []
+        
+
+    def update_unsafe_points(self):
+        a, b = self.velocity
+        # for vertical only
+        width = self.poly_width + 2
+        if a == 0:
+            if b == 1:
+                self.move_up(width)
+                if self.is_near_top() > 0:
+                    self.move_down(self.is_near_top())
+            
+            if b == -1:
+                self.move_down(width)
+                if self.is_near_bottom() > 0:
+                    self.move_up(self.is_near_bottom())
+        
+    
+    def reset_unsafe_points(self):
+        for id in self.unsafe_points:
+            self.grid_cell[id].set_passable(True)
+            self.grid_cell[id]._set_color(WHITE)
+        self.unsafe_points = []
+                
+
+    def calculate_width(self):
+        points = self.inside_points_ids
+        cells = []
+        for point in points:
+            x = point % self.width
+            y = point // self.width
+            cells.append((x, y))
+        # find the lowest x-coordinate and highest x-coordinate to calculate the width
+        min_x = min(cells, key=lambda x: x[0])[0]
+        max_x = max(cells, key=lambda x: x[0])[0]
+        self.poly_width = max_x - min_x + 2
+
+    def get_two_highest_points(self):
+        points = self.inside_points_ids
+        cells = []
+        for point in points:
+            x = point % self.width
+            y = point // self.width
+            cells.append((x, y))
+        # find the cell with the highest y-coordinate with the lowest x-coordinate
+        highest_point = max(cells, key=lambda x: (x[1], -x[0]))
+        # find the cell with the highest y-coordinate with the highest x-coordinate
+        highest_point2 = max(cells, key=lambda x: (x[1], x[0]))
+        
+        if highest_point[0] == highest_point2[0] and highest_point[1] == highest_point2[1]:
+            for point in self.points:
+                if not point[1] == highest_point[1]:
+                    return highest_point, point
+        if highest_point[0] < highest_point2[0]:
+            return highest_point, highest_point2
+        return highest_point2, highest_point
+    
+    def get_two_lowest_points(self):
+        points = self.inside_points_ids
+        cells = []
+        for point in points:
+            x = point % self.width
+            y = point // self.width
+            cells.append((x, y))
+        # find the cell with the lowest y-coordinate with the lowest x-coordinate
+        lowest_point = min(cells, key=lambda x: (x[1], -x[0]))
+        # find the cell with the lowest y-coordinate with the highest x-coordinate
+        lowest_point2 = min(cells, key=lambda x: (x[1], x[0]))
+        if lowest_point[0] == lowest_point2[0] and lowest_point[1] == lowest_point2[1]:
+            for point in self.points:
+                if not point[1] == lowest_point2[1]:
+                    return point, lowest_point2
+        if lowest_point[0] < lowest_point2[0]:
+            return lowest_point, lowest_point2
+        return lowest_point2, lowest_point
+    
+    def move_up(self, width):
+        us_width = width
+        first_point, second_point = self.get_two_highest_points()
+        top_first_point = first_point
+        top_second_point = second_point
+        if top_first_point[1] > top_second_point[1]:
+            us_width = 2
+        for i in range(1, us_width):
+            if first_point[1] + i < self.height:
+                top_first_point = (top_first_point[0], top_first_point[1] + 1)
+                self.unsafe_points.append(first_point[0] + (first_point[1] + i) * self.width)
+                # if second_point[1] + i < self.height:
+                #     top_second_point = (top_second_point[0], top_second_point[1] + 1)
+                #     self.unsafe_points.append(second_point[0] + (second_point[1] + i) * self.width)
+            lines = self.points_in_line(top_first_point, top_second_point)
+            self.unsafe_points.extend(lines)
+        for id in self.unsafe_points:
+            self.grid_cell[id].set_passable(False)
+            #self.grid_cell[id]._set_color(ORANGE)
+
+    def move_down(self, width):
+        us_width = width
+        first_point, second_point = self.get_two_lowest_points()
+        bottom_first_point = first_point
+        bottom_second_point = second_point
+        if bottom_first_point[1] < bottom_second_point[1]:
+            us_width = 2
+        # if bottom_first_point[1] > bottom_second_point[1]:
+        #             if len(self.points) == 3:
+        #                 for i in range(1, width2):
+        #                     if first_point[1] - i >= 0:
+        #                         bottom_first_point = (bottom_first_point[0], bottom_first_point[1] - 1)
+        #                         self.unsafe_points.append(first_point[0] + (first_point[1] - i) * self.width)
+        #             width2 = abs(bottom_first_point[1] - bottom_second_point[1])
+        for i in range(1, us_width):
+            if first_point[1] - i >= 0:
+                bottom_first_point = (bottom_first_point[0], bottom_first_point[1] - 1)
+                self.unsafe_points.append(first_point[0] + (first_point[1] - i) * self.width)
+                # if second_point[1] - i >= 0:
+                #     bottom_second_point = (bottom_second_point[0], bottom_second_point[1] - 1)
+                #     self.unsafe_points.append(second_point[0] + (second_point[1] - i) * self.width)
+        lines = self.points_in_line(bottom_first_point, bottom_second_point)
+        self.unsafe_points.extend(lines)
+
+        for id in self.unsafe_points:
+            self.grid_cell[id].set_passable(False)
+            #self.grid_cell[id]._set_color(ORANGE)
+
+    def is_near_top(self):
+        height = 0 
+        for point in self.points:
+            if point[1] + self.poly_width >= self.height:
+                if point[1] + self.poly_width - self.height > height:
+                    height = point[1] + self.poly_width - self.height
+        if height == 0:
+            return 0
+        return height + 2
+
+    def is_near_bottom(self):
+        height = 0
+        for point in self.points:
+            if point[1] - self.poly_width < 0:
+                if self.poly_width - point[1] > height:
+                    height = self.poly_width - point[1]
+        if height == 0:
+            return 0
+        return height + 2
 
 class List_Polygon:
     def __init__(self, list_points, Grid_cell, width):
