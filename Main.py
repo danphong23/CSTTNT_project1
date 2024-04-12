@@ -25,7 +25,6 @@ def Function_Search(g: Grid, sc: pygame.Surface):
     draw_path(g, sc, path, YELLOW)  # Vẽ đường đi
     # tính chi phí đường đi
     cost = calculate_cost(g, path)
-
     # vẽ chi phí lên màn hình
     show_cost(cost, sc)
 
@@ -103,10 +102,10 @@ def main(data):
 if __name__=='__main__':
     # Đọc dữ liệu từ Input.txt
     data = InputData()
-    data.readInput("input.txt")
-    #data.readInput("input_level_4.txt")
-    #data.printData()
+    # data.readInput("input.txt")
+    data.readInput("input_level_4.txt")
+    data.printData()
 
-    main(data)
-    #main_level_4(data)
+    # main(data)
+    main_level_4(data)
     # nhớ sửa lại kích thước Cell trong Const trước khi test

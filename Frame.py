@@ -5,6 +5,7 @@ from Grid import *
 from Find_the_shortest_route_through_pickup_points import *
 import pygame
 from queue import Queue
+from PathFinder import *
 
 class Frame: 
     def __init__(self, space: Grid, sc: pygame.Surface) -> None:
