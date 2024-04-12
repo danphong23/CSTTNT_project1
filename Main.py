@@ -8,16 +8,22 @@ import threading
 import sys
 from PathFinder import *
 from Find_the_shortest_route_through_pickup_points import *
+from Read_Command_line_parameters import *
 
-# test chức năng tìm đường đi
-def Function_Search(g: Grid, sc: pygame.Surface):
-    path = []
-    # test ở đây, 
-    # path = DFS(g, g.Start, g.Goal)
-    # path = BFS(g, g.Start, g.Goal)
-    # path = UCS(g, g.Start, g.Goal)
-    path = AStar(g, g.Start, g.Goal)
+# test chức năng tìm đường đi (algorithm = BFS, DFS, USC, AStar)
+def Function_Search_normal(g: Grid, sc: pygame.Surface, algorithm: str):
     # path = find_path_with_pickup_points_using_matching(g, g.Start, g.Goal, g.pickup_points)
+    path = []
+    if(algorithm == 'DFS'):
+        path = DFS(g, g.Start, g.Goal)
+    elif(algorithm == 'BFS'):
+        path = BFS(g, g.Start, g.Goal)
+    elif(algorithm == 'UCS'):
+        path = UCS(g, g.Start, g.Goal)
+    elif(algorithm == 'AStar'):
+        path = AStar(g, g.Start, g.Goal)
+    else:
+        path = AStar(g, g.Start, g.Goal)
 
     # thực hiện vẽ đường đi ở đây
     draw_path(g, sc, path, YELLOW)  # Vẽ đường đi
@@ -29,10 +35,10 @@ def Function_Search(g: Grid, sc: pygame.Surface):
     
     
 
-def main(data):
+def main(data: InputData):
     pygame.init()
-    pygame.display.set_caption(f'project1')
-    sc = pygame.display.set_mode((data.SCREEN_WIDTH,data.SCREEN_HEIGHT))
+    pygame.display.set_caption(f'project1 - ')
+    sc = pygame.display.set_mode((data.SCREEN_WIDTH, data.SCREEN_HEIGHT))
     clock = pygame.time.Clock()
     sc.fill(pygame.color.Color(BLACK))
     pygame.display.flip()
@@ -44,7 +50,7 @@ def main(data):
 
     # Function_Search()
     # gọi đa nhiệm 
-    thread0 = threading.Thread(target=Function_Search(space, sc))
+    thread0 = threading.Thread(target=Function_Search_normal(space, sc, 'AStar'))
     thread0.start()
     
     # Xử lý sự kiện
@@ -56,6 +62,8 @@ def main(data):
 
 # ===========================================================
 if __name__=='__main__':
+    # lấy tham số dòng lệnh
+    # read_args = Read_arg()
     # Đọc dữ liệu từ Input.txt
     data = InputData()
     data.readInput("input.txt")
