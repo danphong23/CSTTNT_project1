@@ -229,6 +229,12 @@ def draw_path(g: Grid, sc: pygame.Surface, path, color):
         cell:Cell = g.Grid_cells[i]
         cell.set_color(color, sc, 15)
 
+def clear_path(g: Grid, sc: pygame.Surface, path):
+    # Xóa đường đi trên màn hình
+    for i in path[1:len(path)-1]:
+        cell:Cell = g.Grid_cells[i]
+        cell.set_color(WHITE, sc, 0)
+
 # hàm tìm chi phí đường đi từ đầu đến đích
 def calculate_cost(g:Grid, path):
     """
