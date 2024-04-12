@@ -7,6 +7,7 @@ import pygame
 import threading
 import sys
 from PathFinder import *
+from Find_the_shortest_route_through_pickup_points import *
 
 # test chức năng tìm đường đi
 def Function_Search(g: Grid, sc: pygame.Surface):
@@ -15,7 +16,8 @@ def Function_Search(g: Grid, sc: pygame.Surface):
     # path = DFS(g, g.Start, g.Goal)
     # path = BFS(g, g.Start, g.Goal)
     # path = UCS(g, g.Start, g.Goal)
-    path = AStar(g, g.Start, g.Goal)
+    # path = AStar(g, g.Start, g.Goal)
+    path = find_path_with_pickup_points_using_matching(g, g.Start, g.Goal, g.pickup_points)
 
     # thực hiện vẽ đường đi ở đây
     draw_path(g, sc, path, YELLOW)  # Vẽ đường đi
