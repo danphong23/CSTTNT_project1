@@ -52,8 +52,8 @@ class Grid:
         for i in range(self.height):
             for j in range(self.width):
                 # j*(A+A1)+BOUND, i*(A+A1)+BOUND, A, i*COLS+j, is_brick
-                x = j * (CELL_SIZE + CELL_SPACING) + FRAME_THICKNESS
-                y = (self.height -1 - i) * (CELL_SIZE + CELL_SPACING) + FRAME_THICKNESS
+                x = j * CELL_SIZE  + FRAME_THICKNESS
+                y = (self.height -1 - i) * CELL_SIZE + FRAME_THICKNESS
                 id = j + i * self.width 
                 cell = Cell(x, y, CELL_SIZE, id)
                 self.Grid_cells.append(cell)
@@ -62,25 +62,25 @@ class Grid:
         for i in range(self.height + 2):
             id = -1
             # tường bên trái màn hình
-            y = i * (CELL_SIZE + CELL_SPACING)
+            y = i * CELL_SIZE
             cell = Cell(0, y, CELL_SIZE, id)
             cell._set_color(GREY)
             self.wall_cells.append(cell)
             # tường bên phải màn hình
-            y = i * (CELL_SIZE + CELL_SPACING)
-            cell = Cell(self.width * (CELL_SIZE + CELL_SPACING) + FRAME_THICKNESS, y, CELL_SIZE, id)
+            y = i * CELL_SIZE
+            cell = Cell(self.width * CELL_SIZE + FRAME_THICKNESS, y, CELL_SIZE, id)
             cell._set_color(GREY)
             self.wall_cells.append(cell)
         for i in range(self.width):
             id = -1
             # tường bên trên màn hình
-            x = i * (CELL_SIZE + CELL_SPACING) + FRAME_THICKNESS
+            x = i * CELL_SIZE + FRAME_THICKNESS
             cell = Cell(x, 0, CELL_SIZE, id)
             cell._set_color(GREY)
             self.wall_cells.append(cell)
             # tường bên dưới màn hình
-            x = i * (CELL_SIZE + CELL_SPACING) + FRAME_THICKNESS
-            cell = Cell(x, self.height * (CELL_SIZE + CELL_SPACING) + FRAME_THICKNESS, CELL_SIZE, id)
+            x = i * CELL_SIZE + FRAME_THICKNESS
+            cell = Cell(x, self.height * CELL_SIZE + FRAME_THICKNESS, CELL_SIZE, id)
             cell._set_color(GREY)
             self.wall_cells.append(cell)
 

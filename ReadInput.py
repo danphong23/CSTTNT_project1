@@ -9,8 +9,8 @@ class InputData:
         self.Pickup_Points = []  # danh sách tọa độ các điểm đón ([(x1,y1), (x2,y2),…]) (nếu có)
         self.Polygons = []  # danh sách các danh sách các tọa độ điểm của đa giác 
                             # [[(x1,y1), (x2, y2), (x3, y3),...], [(x1,y1), (x2, y2), (x3, y3),...],... ]
-        self.SCREEN_WIDTH = (self.Num_Cols * CELL_SIZE) + 2 * FRAME_THICKNESS + (self.Num_Cols - 1) * CELL_SPACING  # Chiều rộng của màn hình
-        self.SCREEN_HEIGHT = (self.Num_Rows * CELL_SIZE) + 2 * FRAME_THICKNESS + (self.Num_Rows - 1) * CELL_SPACING  # Chiều cao của màn hình
+        self.SCREEN_WIDTH = (self.Num_Cols * CELL_SIZE) + 2 * FRAME_THICKNESS   # Chiều rộng của màn hình
+        self.SCREEN_HEIGHT = (self.Num_Rows * CELL_SIZE) + 2 * FRAME_THICKNESS # Chiều cao của màn hình
 
 
     def readInput(self, filename: str):
@@ -18,8 +18,8 @@ class InputData:
             lines = f.readlines()
             dimensions = list(map(int, lines[0].strip().split(',')))
             self.Num_Cols, self.Num_Rows = dimensions[:2]
-            self.SCREEN_WIDTH = (self.Num_Cols * CELL_SIZE) + 2 * FRAME_THICKNESS + (self.Num_Cols - 1) * CELL_SPACING  # Chiều rộng của màn hình
-            self.SCREEN_HEIGHT = (self.Num_Rows * CELL_SIZE) + 2 * FRAME_THICKNESS + (self.Num_Rows - 1) * CELL_SPACING  # Chiều cao của màn hình
+            self.SCREEN_WIDTH = (self.Num_Cols * CELL_SIZE) + 2 * FRAME_THICKNESS # Chiều rộng của màn hình
+            self.SCREEN_HEIGHT = (self.Num_Rows * CELL_SIZE) + 2 * FRAME_THICKNESS # Chiều cao của màn hình
 
             if len(dimensions) > 2:
                 self.Num_Hight = dimensions[2]

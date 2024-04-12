@@ -30,6 +30,7 @@ class Cell:
             screen: Màn hình pygame để vẽ.
         """
         pygame.draw.rect(screen, self.color, self.rect)
+        pygame.draw.rect(screen, BLACK, self.rect, CELL_SPACING)
 
     def set_passable(self, passable):
         self.passable = passable
