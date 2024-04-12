@@ -18,7 +18,7 @@ class Grid:
         self.cell_size = input.Num_Cols*input.Num_Rows
         self.Start = None  # Ô bắt đầu (S)
         self.Goal = None  # Ô kết thúc (G)
-        pickup_points = [] # danh sách các điểm đón
+        self.pickup_points = [] # danh sách các điểm đón
         # self.Polygons = []  # Danh sách các đa giác
         
         # tạo danh sách các ô vuông ở viền grid
@@ -42,7 +42,7 @@ class Grid:
             id = x + y * self.width
             cell:Cell = self.Grid_cells[id]
             cell._set_color(PURPLE)
-            pickup_points.append(cell)
+            self.pickup_points.append(cell)
 
         # Tạo danh sách các đa giác
         self.Polygons = List_Polygon(input.Polygons, self.Grid_cells, self.width)

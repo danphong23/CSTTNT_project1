@@ -12,10 +12,10 @@ from PathFinder import *
 def Function_Search(g: Grid, sc: pygame.Surface):
     path = []
     # test ở đây, 
-    # path = DFS(g, sc)
-    # path = BFS(g, sc)
-    # path = UCS(g, sc)
-    path = AStar(g, sc)
+    # path = DFS(g, g.Start, g.Goal)
+    # path = BFS(g, g.Start, g.Goal)
+    # path = UCS(g, g.Start, g.Goal)
+    path = AStar(g, g.Start, g.Goal)
 
     # thực hiện vẽ đường đi ở đây
     draw_path(g, sc, path, YELLOW)  # Vẽ đường đi
