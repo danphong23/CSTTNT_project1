@@ -18,8 +18,8 @@ def Function_Search(g: Grid, sc: pygame.Surface):
     # path = DFS(g, g.Start, g.Goal)
     # path = BFS(g, g.Start, g.Goal)
     # path = UCS(g, g.Start, g.Goal)
-    # path = AStar(g, g.Start, g.Goal)
-    path = find_path_with_pickup_points_using_matching(g, g.Start, g.Goal, g.pickup_points)
+    path = AStar(g, g.Start, g.Goal)
+    #path = find_path_with_pickup_points_using_matching(g, g.Start, g.Goal, g.pickup_points)
 
     # thực hiện vẽ đường đi ở đây
     draw_path(g, sc, path, YELLOW)  # Vẽ đường đi
@@ -48,6 +48,7 @@ def main_level_4(data):
 
     # Đa nhiệm tìm đường
     thread0 = threading.Thread(target=find_new_path, args=(queue_request, queue_response, space, sc))
+    thread0.daemon = True
     thread0.start()
 
     # Tìm đường đi khởi đầu
@@ -103,10 +104,10 @@ def main(data):
 if __name__=='__main__':
     # Đọc dữ liệu từ Input.txt
     data = InputData()
-    data.readInput("input.txt")
-    #data.readInput("input_level_4.txt")
+    #data.readInput("input.txt")
+    data.readInput("input_level_4.txt")
     #data.printData()
-
-    main(data)
-    #main_level_4(data)
+    
+    #main(data)
+    main_level_4(data)
     # nhớ sửa lại kích thước Cell trong Const trước khi test
