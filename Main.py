@@ -14,10 +14,10 @@ from queue import Queue
 def Function_Search(g: Grid, sc: pygame.Surface):
     path = []
     # test ở đây, 
-    # path = DFS(g, sc)
-    # path = BFS(g, sc)
-    # path = UCS(g, sc)
-    path = AStar(g, sc)
+    # path = DFS(g, g.Start, g.Goal)
+    # path = BFS(g, g.Start, g.Goal)
+    # path = UCS(g, g.Start, g.Goal)
+    path = AStar(g, g.Start, g.Goal)
 
     # thực hiện vẽ đường đi ở đây
     draw_path(g, sc, path, YELLOW)  # Vẽ đường đi
@@ -78,7 +78,7 @@ def main(data):
     pygame.display.set_caption(f'project1')
     sc = pygame.display.set_mode((data.SCREEN_WIDTH,data.SCREEN_HEIGHT))
     clock = pygame.time.Clock()
-    sc.fill(pygame.color.Color(GREY))
+    sc.fill(pygame.color.Color(BLACK))
     pygame.display.flip()
     
     space = Grid(data)

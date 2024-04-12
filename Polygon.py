@@ -13,7 +13,7 @@ import random
 # *** có thể viết 1 hàm thực hiện việc di chuyển đa giác sau đó thực hiện gọi đa 
 #       nhiệm để không ảnh hưởng đến chương trình
 # *** vấn đề là có sự ảnh hưởng của tốc độ di chuyển (delay) của nhân vật tìm đường, tốc độ di chuyển của các đa giác
-# *** di chuyển đa giác tới lui thì dễ nhưng thuật toán chạy đúng
+# *** di chuyển đa giác tới lui thì dễ nhưng thuật toán chạy đúng thì khó
 # ***********************************************************************************************************
 
 # ta chỉ xét đa giác lồi
@@ -27,7 +27,7 @@ class Polygon:
             Grid_cell: Danh sách các ô vuông trên lưới.
         """
         self.points = points
-        self.color = BLACK
+        self.color = GREY
         self.width = width # số cột
         self.height = len(Grid_cell)//width
         self.velocity = [0, random.choice([-1, 1])] # vận tốc di chuyển của đa giác
@@ -65,7 +65,7 @@ class Polygon:
             # Tô màu các Cell tương ứng với các điểm trên đường thẳng
             for id in points_in_line:
                 Grid_cell[id].set_passable(False)
-                Grid_cell[id]._set_color(BLACK)
+                Grid_cell[id]._set_color(self.color)
                 self.inside_points_ids.append(id)
                 
 
@@ -75,7 +75,7 @@ class Polygon:
         points_in_line = self.points_in_line(A, B)
         for id in points_in_line:
             Grid_cell[id].set_passable(False)
-            Grid_cell[id]._set_color(BLACK)
+            Grid_cell[id]._set_color(self.color)
             self.inside_points_ids.append(id)
 
 

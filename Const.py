@@ -1,6 +1,6 @@
 # Hằng số
-CELL_SIZE = 10  # Độ dài cạnh của một ô vuông (cell)
-FRAME_THICKNESS = 25  # Độ dày của khung
+CELL_SIZE = 25  # Độ dài cạnh của một ô vuông (cell)
+FRAME_THICKNESS = 25 + 1  # Độ dày của khung
 CELL_SPACING = 1  # Khoảng cách giữa hai ô vuông (cell)
 
 # Màu sắc

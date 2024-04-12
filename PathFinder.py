@@ -7,10 +7,10 @@ from Cell import *
 import heapq
 
 # tìm kiếm theo chiều rộng trả về danh sách đường đi
-def BFS(g: Grid, sc: pygame.Surface):
+def BFS(g: Grid, Start: Cell, Goal: Cell):
     """Thực hiện thuật toán BFS trên lưới g."""
 
-    open_set = [g.Start.id]  # Danh sách các ô cần thăm dò
+    open_set = [Start.id]  # Danh sách các ô cần thăm dò
     closed_set = []  # Tập hợp các ô đã thăm dò (dùng set để kiểm tra nhanh hơn)
     father = [-1] * g.get_num_cells()  # Lưu vết đường đi
 
@@ -18,9 +18,9 @@ def BFS(g: Grid, sc: pygame.Surface):
         current_id = open_set.pop(0)  # Lấy ô đầu tiên trong danh sách
         current = g.Grid_cells[current_id]
 
-        if g.is_goal(current):  # Nếu đã đến đích
+        if current_id == Goal.id:  # Nếu đã đến đích
             # tìm danh sách các cell trên đường đi
-            path = find_path(father, g.Goal.id)
+            path = find_path(father, Goal.id)
 
             return path
 
@@ -37,10 +37,10 @@ def BFS(g: Grid, sc: pygame.Surface):
     return []
 
 # Tìm kiếm theo chiều sâu trả về danh sách đường đi
-def DFS(g: Grid, sc: pygame.Surface):
+def DFS(g: Grid, Start: Cell, Goal: Cell):
     """Thực hiện thuật toán DFS trên lưới g."""
 
-    open_stack = [g.Start.id]  # Stack chứa các ô cần thăm dò
+    open_stack = [Start.id]  # Stack chứa các ô cần thăm dò
     closed_set = []  # Tập hợp các ô đã thăm dò (dùng set để kiểm tra nhanh hơn)
     father = [-1] * g.get_num_cells()  # Lưu vết đường đi
 
@@ -48,7 +48,7 @@ def DFS(g: Grid, sc: pygame.Surface):
         current_id = open_stack.pop()  # Lấy ô cuối cùng trong stack
         current = g.Grid_cells[current_id]
 
-        if g.is_goal(current):  # Nếu đã đến đích
+        if current_id == Goal.id:  # Nếu đã đến đích
             # tìm danh sách các cell trên đường đi
             path = find_path(father, g.Goal.id)
             
@@ -68,10 +68,10 @@ def DFS(g: Grid, sc: pygame.Surface):
 
 
 # Tìm kiếm đồng nhất (UCS - Uniform Cost Search) trả về danh sách đường đi
-def UCS(g: Grid, sc: pygame.Surface):
+def UCS(g: Grid, Start: Cell, Goal: Cell):
     # Lấy ID của ô bắt đầu và ô kết thúc
-    start_id = g.Start.id
-    goal_id = g.Goal.id
+    start_id = Start.id
+    goal_id = Goal.id
 
     # Tạo một dict để lưu trữ các ô dựa trên ID
     cell_dict = {cell.id: cell for cell in g.Grid_cells}
@@ -127,9 +127,9 @@ def UCS(g: Grid, sc: pygame.Surface):
 
 
 # Tìm kiếm A* (A-Star) trả về danh sách đường đi
-def AStar(g: Grid, sc: pygame.Surface):
-    start_id = g.Start.id # lấy id của ô bắt đầu
-    goal_id = g.Goal.id # lấy id của ô kết thúc
+def AStar(g: Grid, Start: Cell, Goal: Cell):
+    start_id = Start.id # lấy id của ô bắt đầu
+    goal_id = Goal.id # lấy id của ô kết thúc
 
     # Tạo một map để lưu trữ các ô theo id
     cell_dict = {cell.id: cell for cell in g.Grid_cells}
