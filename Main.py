@@ -35,7 +35,7 @@ def find_path(queue_request, queue_response, space, sc):
         _ = queue_request.get()
 
         path = []
-        path = AStar(space, sc)
+        path = AStar(space, space.Start, space.Goal)
 
         # Trả về đường đi
         queue_response.put(path)
@@ -54,8 +54,10 @@ class Agent:
 
     def update(self):
         if self.is_arrived is not True:
-            self.frame.update_new_frame()
-            pygame.display.flip()
+            self.count += 1
+            if self.count % 2 == 0:
+                self.frame.update_new_frame()
+                pygame.display.flip()
             if self.delay == 0:
                 result = self.frame.update_agent(self.path)
                 if result == False:
@@ -65,7 +67,7 @@ class Agent:
                     self.delay = 5
             else:
                 self.delay -= 1
-            pygame.time.delay(200)
+            pygame.time.delay(100)
             if not self.queue_response.empty():
                 self.path = self.queue_response.get()
                 draw_path(self.space, self.sc, self.path, YELLOW)
@@ -73,25 +75,17 @@ class Agent:
                 clear_path(self.space, self.sc, self.path)
             pygame.display.flip()
 
-def main(data):
+def main_level_4(data):
     pygame.init()
     pygame.display.set_caption(f'project1')
     sc = pygame.display.set_mode((data.SCREEN_WIDTH,data.SCREEN_HEIGHT))
-    clock = pygame.time.Clock()
     sc.fill(pygame.color.Color(BLACK))
     pygame.display.flip()
-    
+
     space = Grid(data)
     space.draw(sc)
 
     frame = Frame(space, sc)
-
-    #clock.tick(200)
-
-    # Function_Search()
-    # gọi đa nhiệm 
-    #thread0 = threading.Thread(target=Function_Search(space, sc))
-    #thread0.start()
 
     # Queue gửi và nhận dữ liệu
     queue_request = Queue()
@@ -125,6 +119,31 @@ def main(data):
                 pygame.quit()
                 sys.exit()
 
+def main(data):
+    pygame.init()
+    pygame.display.set_caption(f'project1')
+    sc = pygame.display.set_mode((data.SCREEN_WIDTH,data.SCREEN_HEIGHT))
+    clock = pygame.time.Clock()
+    sc.fill(pygame.color.Color(BLACK))
+    pygame.display.flip()
+    
+    space = Grid(data)
+    space.draw(sc)
+
+    clock.tick(200)
+
+    # Function_Search()
+    # gọi đa nhiệm 
+    thread0 = threading.Thread(target=Function_Search(space, sc))
+    thread0.start()
+    
+    # Xử lý sự kiện
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
 # ===========================================================
 if __name__=='__main__':
     # Đọc dữ liệu từ Input.txt
@@ -132,4 +151,5 @@ if __name__=='__main__':
     data.readInput("input.txt")
     data.printData()
 
-    main(data)
+    #main(data)
+    main_level_4(data)
