@@ -82,8 +82,8 @@ def find_new_path(queue_request, queue_response, space: Grid, sc):
         _ = queue_request.get()
 
         path = []
-        #path = AStar(space, space.Start, space.Goal)
-        path = find_path_with_pickup_points_using_matching(space, space.Start, space.Goal, space.pickup_points)
+        path = AStar(space, space.Start, space.Goal)
+        # path = find_path_with_pickup_points_using_matching(space, space.Start, space.Goal, space.pickup_points)
 
         # Trả về đường đi
         queue_response.put(path)
