@@ -56,6 +56,7 @@ class Frame:
                 self.space.update_start(cell)
                 self.space.draw(self.sc)
                 return "arrived"
+            self.space.arraived_pickup_point(cell)
             if cell.passable:
                 self.space.update_start(cell)
                 path.pop(1)

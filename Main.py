@@ -31,13 +31,14 @@ def Function_Search(g: Grid, sc: pygame.Surface):
 
 
 # Tìm đường đi mới
-def find_path(queue_request, queue_response, space, sc):
+def find_path(queue_request, queue_response, space: Grid, sc):
     while True:
         # Đợi yêu cầu tìm đường
         _ = queue_request.get()
 
         path = []
-        path = AStar(space, space.Start, space.Goal)
+        #path = AStar(space, space.Start, space.Goal)
+        path = find_path_with_pickup_points_using_matching(space, space.Start, space.Goal, space.pickup_points)
 
         # Trả về đường đi
         queue_response.put(path)
@@ -152,7 +153,7 @@ if __name__=='__main__':
     data = InputData()
     data.readInput("input.txt")
     #data.readInput("input_level_4.txt")
-    data.printData()
+    #data.printData()
 
     main(data)
     #main_level_4(data)
