@@ -83,7 +83,7 @@ def find_new_path(queue_request, queue_response, space: Grid, sc):
 
         path = []
         path = AStar(space, space.Start, space.Goal)
-        # path = find_path_with_pickup_points_using_matching(space, space.Start, space.Goal, space.pickup_points)
+        #path = find_path_with_pickup_points_using_matching(space, space.Start, space.Goal, space.pickup_points)
 
         # Trả về đường đi
         queue_response.put(path)
@@ -100,12 +100,25 @@ class Agent:
         self.queue_request = queue_request
         self.queue_response = queue_response
 
+        # Tìm đường đi khởi đầu
+        self.queue_request.put(1)
+
+        while True:
+            if not self.queue_response.empty():
+                self.path = self.queue_response.get()
+                break
+
+        draw_path(self.space, self.sc, self.path, YELLOW)
+        pygame.display.flip()
+        clear_path(self.space, self.sc, self.path)
+        pygame.display.flip()
+
     def update(self):
         if self.is_arrived is not True:
-            self.count += 1
-            if self.count % 2 == 0:
-                self.frame.update_new_frame()
-                pygame.display.flip()
+            # self.count += 1
+            # if self.count % 2 == 0:
+            self.frame.update_new_frame()
+            pygame.display.flip()
             if self.delay == 0:
                 result = self.frame.update_agent(self.path)
                 if result == False:
@@ -121,4 +134,5 @@ class Agent:
                 draw_path(self.space, self.sc, self.path, YELLOW)
                 pygame.display.flip()
                 clear_path(self.space, self.sc, self.path)
+                self.count = 0
             pygame.display.flip()

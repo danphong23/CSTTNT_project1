@@ -180,7 +180,7 @@ class Polygon:
     def update_unsafe_points(self):
         a, b = self.velocity
         # for vertical only
-        width = self.poly_width + 2
+        width = self.poly_width
         if a == 0:
             if b == 1:
                 self.move_up(width)
@@ -210,7 +210,7 @@ class Polygon:
         # find the lowest x-coordinate and highest x-coordinate to calculate the width
         min_x = min(cells, key=lambda x: x[0])[0]
         max_x = max(cells, key=lambda x: x[0])[0]
-        self.poly_width = max_x - min_x + 2
+        self.poly_width = int(math.floor((max_x - min_x + 2) * 1.25))
 
     def get_two_highest_points(self):
         points = self.inside_points_ids
@@ -224,9 +224,9 @@ class Polygon:
         # find the cell with the highest y-coordinate with the highest x-coordinate
         highest_point2 = max(cells, key=lambda x: (x[1], x[0]))
         
-        if highest_point[0] == highest_point2[0] and highest_point[1] == highest_point2[1]:
+        if highest_point[0] == highest_point2[0]:
             for point in self.points:
-                if not point[1] == highest_point[1]:
+                if not point[0] == highest_point[0]:
                     return highest_point, point
         if highest_point[0] < highest_point2[0]:
             return highest_point, highest_point2
@@ -243,9 +243,9 @@ class Polygon:
         lowest_point = min(cells, key=lambda x: (x[1], -x[0]))
         # find the cell with the lowest y-coordinate with the highest x-coordinate
         lowest_point2 = min(cells, key=lambda x: (x[1], x[0]))
-        if lowest_point[0] == lowest_point2[0] and lowest_point[1] == lowest_point2[1]:
+        if lowest_point[0] == lowest_point2[0]:
             for point in self.points:
-                if not point[1] == lowest_point2[1]:
+                if not point[0] == lowest_point2[0]:
                     return point, lowest_point2
         if lowest_point[0] < lowest_point2[0]:
             return lowest_point, lowest_point2
@@ -262,9 +262,6 @@ class Polygon:
             if first_point[1] + i < self.height:
                 top_first_point = (top_first_point[0], top_first_point[1] + 1)
                 self.unsafe_points.append(first_point[0] + (first_point[1] + i) * self.width)
-                # if second_point[1] + i < self.height:
-                #     top_second_point = (top_second_point[0], top_second_point[1] + 1)
-                #     self.unsafe_points.append(second_point[0] + (second_point[1] + i) * self.width)
             lines = self.points_in_line(top_first_point, top_second_point)
             self.unsafe_points.extend(lines)
         for id in self.unsafe_points:
@@ -278,20 +275,10 @@ class Polygon:
         bottom_second_point = second_point
         if bottom_first_point[1] < bottom_second_point[1]:
             us_width = 2
-        # if bottom_first_point[1] > bottom_second_point[1]:
-        #             if len(self.points) == 3:
-        #                 for i in range(1, width2):
-        #                     if first_point[1] - i >= 0:
-        #                         bottom_first_point = (bottom_first_point[0], bottom_first_point[1] - 1)
-        #                         self.unsafe_points.append(first_point[0] + (first_point[1] - i) * self.width)
-        #             width2 = abs(bottom_first_point[1] - bottom_second_point[1])
         for i in range(1, us_width):
             if first_point[1] - i >= 0:
                 bottom_first_point = (bottom_first_point[0], bottom_first_point[1] - 1)
                 self.unsafe_points.append(first_point[0] + (first_point[1] - i) * self.width)
-                # if second_point[1] - i >= 0:
-                #     bottom_second_point = (bottom_second_point[0], bottom_second_point[1] - 1)
-                #     self.unsafe_points.append(second_point[0] + (second_point[1] - i) * self.width)
         lines = self.points_in_line(bottom_first_point, bottom_second_point)
         self.unsafe_points.extend(lines)
 
@@ -307,7 +294,7 @@ class Polygon:
                     height = point[1] + self.poly_width - self.height
         if height == 0:
             return 0
-        return height + 2
+        return height
 
     def is_near_bottom(self):
         height = 0
@@ -317,7 +304,7 @@ class Polygon:
                     height = self.poly_width - point[1]
         if height == 0:
             return 0
-        return height + 2
+        return height
 
 class List_Polygon:
     def __init__(self, list_points, Grid_cell, width):

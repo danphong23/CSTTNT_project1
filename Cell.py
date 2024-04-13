@@ -29,8 +29,11 @@ class Cell:
         Args:
             screen: Màn hình pygame để vẽ.
         """
+        # tô nền Cell
         pygame.draw.rect(screen, self.color, self.rect)
+        # tô viền Cell
         pygame.draw.rect(screen, BLACK, self.rect, CELL_SPACING)
+
 
     def set_passable(self, passable):
         self.passable = passable
