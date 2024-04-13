@@ -30,7 +30,7 @@ class Grid:
         self.init_wall()
 
         # Tạo danh sách các ô vuông
-        self.Grid_cells = []  # Danh sách các ô vuông
+        self.Grid_cells: list[Cell] = []  # Danh sách các ô vuông
         self.init_grid_cells()
 
         # Xác định ô bắt đầu và kết thúc
@@ -99,7 +99,7 @@ class Grid:
         for cell in self.wall_cells:
             cell.draw(screen)
 
-        pygame.display.flip()
+        # pygame.display.flip()
     
     # vẽ các điểm đón
     def draw_pickup_points(self, screen: pygame.Surface, Color = PURPLE):

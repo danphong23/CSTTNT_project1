@@ -5,6 +5,7 @@ from Grid import *
 from Find_the_shortest_route_through_pickup_points import *
 import pygame
 from queue import Queue
+from PathFinder import *
 
 class Frame: 
     def __init__(self, space: Grid, sc: pygame.Surface) -> None:
@@ -49,7 +50,7 @@ class Frame:
         self.space.draw(self.sc)
         
     def update_agent(self, path):
-        if path is not []:
+        if path != []:
             if len(path) > 1:
                 cell:Cell = self.space.Grid_cells[path[1]]
             else:
@@ -75,7 +76,7 @@ class Frame:
 
 
 # Tìm đường đi mới
-def find_new_path(queue_request: Queue, queue_response: Queue, space: Grid, algorithm: str):
+def find_new_path(queue_request, queue_response, space: Grid, sc):
     while True:
         # Đợi yêu cầu tìm đường
         _ = queue_request.get()
@@ -108,16 +109,16 @@ class Agent:
                 break
 
         draw_path(self.space, self.sc, self.path, YELLOW)
-        pygame.display.flip()
+        # pygame.display.flip()
         clear_path(self.space, self.sc, self.path)
-        pygame.display.flip()
+        # pygame.display.flip()
 
     def update(self):
         if self.is_arrived is not True:
             # self.count += 1
             # if self.count % 2 == 0:
             self.frame.update_new_frame()
-            pygame.display.flip()
+            # pygame.display.flip()
             if self.delay == 0:
                 result = self.frame.update_agent(self.path)
                 if result == False:
@@ -131,7 +132,7 @@ class Agent:
             if not self.queue_response.empty():
                 self.path = self.queue_response.get()
                 draw_path(self.space, self.sc, self.path, YELLOW)
-                pygame.display.flip()
+                # pygame.display.flip()
                 clear_path(self.space, self.sc, self.path)
                 self.count = 0
-            pygame.display.flip()
+            # pygame.display.flip()
