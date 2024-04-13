@@ -234,7 +234,7 @@ def draw_path(g: Grid, sc: pygame.Surface, path, color):
 
 def clear_path(g: Grid, sc: pygame.Surface, path):
     # Xóa đường đi trên màn hình
-    for i in path[1:len(path)-2]:
+    for i in path[1:len(path)-1]:
         cell:Cell = g.Grid_cells[i]
         cell.set_color(WHITE, sc, 0)
 

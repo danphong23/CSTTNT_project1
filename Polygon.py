@@ -277,7 +277,7 @@ class Polygon:
             self.unsafe_points.extend(lines)
         for id in self.unsafe_points:
             self.grid_cell[id].set_passable(False)
-            self.grid_cell[id]._set_color(ORANGE)
+            #self.grid_cell[id]._set_color(ORANGE)
 
     def move_down(self, width):
         us_width = width
@@ -295,7 +295,7 @@ class Polygon:
 
         for id in self.unsafe_points:
             self.grid_cell[id].set_passable(False)
-            self.grid_cell[id]._set_color(ORANGE)
+            #self.grid_cell[id]._set_color(ORANGE)
 
     def is_near_top(self):
         height = 0 
