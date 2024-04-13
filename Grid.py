@@ -45,7 +45,6 @@ class Grid:
             y = p[1]
             id = x + y * self.width
             cell:Cell = self.Grid_cells[id]
-            cell._set_color(PURPLE)
             self.pickup_points.append(cell)
 
         # Tạo danh sách các đa giác
@@ -101,7 +100,13 @@ class Grid:
             cell.draw(screen)
 
         pygame.display.flip()
-    # Các hàm khác...
+    
+    # vẽ các điểm đón
+    def draw_pickup_points(self, screen: pygame.Surface, Color = PURPLE):
+        for cell in self.pickup_points:
+            cell.set_color(Color, screen)
+
+
 
     def get_num_cells(self) -> int:
         """
