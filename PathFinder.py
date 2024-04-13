@@ -273,14 +273,7 @@ def show_cost(cost, sc: pygame.Surface):
         sc: Màn hình pygame để vẽ.
         cost: Chi phí đường đi.
     """
-    # Cài đặt font chữ
-    font = pygame.font.SysFont("Arial", 20)
+    cap = pygame.display.get_caption()[0]
+    pygame.display.set_caption(cap + f" - Cost: {cost:.2f}")
 
-    # Tạo text hiển thị chi phí
-    text = font.render(f"Cost: {cost:.2f}", True, RED)
-
-    # Vẽ text lên màn hình
-    sc.blit(text, (10, 0))
-
-    # Cập nhật màn hình
     pygame.display.flip()
