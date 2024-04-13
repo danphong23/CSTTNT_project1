@@ -149,3 +149,43 @@ class Grid:
                 neighbors.append(self.Grid_cells[id_cell])
 
         return neighbors
+    
+
+    def update_start(self, cell: Cell):
+        """
+        Cập nhật ô bắt đầu mới.
+
+        Args:
+            cell: Ô mới.
+        """
+        self.Start._set_color(WHITE)
+        self.Start = cell
+        self.Start._set_color(GREEN)
+
+    def arrived_goal(self, cell: Cell):
+        """
+        Kiểm tra xem ô đó có phải là ô kết thúc không.
+
+        Args:
+            cell: Ô cần kiểm tra.
+
+        Returns:
+            True nếu ô là ô kết thúc, False nếu không.
+        """
+        return cell.id == self.Goal.id
+    
+    def arraived_pickup_point(self, cell: Cell):
+        """
+        Kiểm tra xem ô đó có phải là ô đón không.
+
+        Args:
+            cell: Ô cần kiểm tra.
+
+        Returns:
+            True nếu ô là ô đón, False nếu không.
+        """
+        for p in self.pickup_points:
+            if cell.id == p.id:
+                self.pickup_points.remove(p)
+                return True
+        return False
