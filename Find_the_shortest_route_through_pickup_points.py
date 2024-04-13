@@ -4,7 +4,8 @@ from PathFinder import *
 
 def find_path_with_pickup_points_using_matching(g: Grid, start: Cell, goal: Cell, pickup_points):
     """
-    Hàm thực hiện thuật toán ghép để tìm đường đi ngắn nhất từ điểm đầu đến các điểm đón (không phân biệt thứ tự) và sau đó đến đích.
+    Hàm thực hiện thuật toán ghép để tìm đường đi ngắn nhất từ điểm 
+    đầu đến các điểm đón (không phân biệt thứ tự) và sau đó đến đích.
 
     Args:
         g: Lớp Grid đại diện cho bản đồ.

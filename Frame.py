@@ -99,6 +99,19 @@ class Agent:
         self.queue_request = queue_request
         self.queue_response = queue_response
 
+        # Tìm đường đi khởi đầu
+        self.queue_request.put(1)
+
+        while True:
+            if not self.queue_response.empty():
+                self.path = self.queue_response.get()
+                break
+
+        draw_path(self.space, self.sc, self.path, YELLOW)
+        pygame.display.flip()
+        clear_path(self.space, self.sc, self.path)
+        pygame.display.flip()
+
     def update(self):
         if self.is_arrived is not True:
             # self.count += 1

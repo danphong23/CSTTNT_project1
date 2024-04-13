@@ -15,7 +15,11 @@ class Grid:
         """
         self.width = input.Num_Cols
         self.height = input.Num_Rows
-        self.cell_size = input.Num_Cols*input.Num_Rows
+        # kích thước 1 Cell
+        self.CELL_SIZE = input.CELL_SIZE
+
+        # số phần tử Cell trong Grid
+        self.grid_size = input.Num_Cols*input.Num_Rows
         self.Start = None  # Ô bắt đầu (S)
         self.Goal = None  # Ô kết thúc (G)
         self.pickup_points = [] # danh sách các điểm đón
@@ -52,35 +56,35 @@ class Grid:
         for i in range(self.height):
             for j in range(self.width):
                 # j*(A+A1)+BOUND, i*(A+A1)+BOUND, A, i*COLS+j, is_brick
-                x = j * (CELL_SIZE + CELL_SPACING) + FRAME_THICKNESS
-                y = (self.height -1 - i) * (CELL_SIZE + CELL_SPACING) + FRAME_THICKNESS
+                x = j * self.CELL_SIZE  + self.CELL_SIZE
+                y = (self.height -1 - i) * self.CELL_SIZE + self.CELL_SIZE
                 id = j + i * self.width 
-                cell = Cell(x, y, CELL_SIZE, id)
+                cell = Cell(x, y, self.CELL_SIZE, id)
                 self.Grid_cells.append(cell)
     # khởi tạo tường
     def init_wall(self):
         for i in range(self.height + 2):
             id = -1
             # tường bên trái màn hình
-            y = i * (CELL_SIZE + CELL_SPACING)
-            cell = Cell(0, y, CELL_SIZE, id)
+            y = i * self.CELL_SIZE
+            cell = Cell(0, y, self.CELL_SIZE, id)
             cell._set_color(GREY)
             self.wall_cells.append(cell)
             # tường bên phải màn hình
-            y = i * (CELL_SIZE + CELL_SPACING)
-            cell = Cell(self.width * (CELL_SIZE + CELL_SPACING) + FRAME_THICKNESS, y, CELL_SIZE, id)
+            y = i * self.CELL_SIZE
+            cell = Cell(self.width * self.CELL_SIZE + self.CELL_SIZE, y, self.CELL_SIZE, id)
             cell._set_color(GREY)
             self.wall_cells.append(cell)
         for i in range(self.width):
             id = -1
             # tường bên trên màn hình
-            x = i * (CELL_SIZE + CELL_SPACING) + FRAME_THICKNESS
-            cell = Cell(x, 0, CELL_SIZE, id)
+            x = i * self.CELL_SIZE + self.CELL_SIZE
+            cell = Cell(x, 0, self.CELL_SIZE, id)
             cell._set_color(GREY)
             self.wall_cells.append(cell)
             # tường bên dưới màn hình
-            x = i * (CELL_SIZE + CELL_SPACING) + FRAME_THICKNESS
-            cell = Cell(x, self.height * (CELL_SIZE + CELL_SPACING) + FRAME_THICKNESS, CELL_SIZE, id)
+            x = i * self.CELL_SIZE + self.CELL_SIZE
+            cell = Cell(x, self.height * self.CELL_SIZE + self.CELL_SIZE, self.CELL_SIZE, id)
             cell._set_color(GREY)
             self.wall_cells.append(cell)
 

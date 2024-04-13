@@ -221,7 +221,7 @@ class Polygon:
         # find the lowest x-coordinate and highest x-coordinate to calculate the width
         min_x = min(cells, key=lambda x: x[0])[0]
         max_x = max(cells, key=lambda x: x[0])[0]
-        self.poly_width = max_x - min_x + 2
+        self.poly_width = int(math.floor((max_x - min_x + 2) * 1.25))
 
     def get_two_highest_points(self):
         points = self.inside_points_ids

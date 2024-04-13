@@ -1,6 +1,6 @@
 # Hằng số
-CELL_SIZE = 10  # Độ dài cạnh của một ô vuông (cell)
-FRAME_THICKNESS = 25 + 1  # Độ dày của khung (không đổi)
+SCREEN_WIDTH_MAX = 900
+SCREEN_HEIGHT_MAX = 700
 CELL_SPACING = 1  # Khoảng cách giữa hai ô vuông (cell)
 
 # Màu sắc
