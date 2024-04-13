@@ -122,8 +122,7 @@ def Level_implementation(g: Grid, sc: pygame.surface, read_args:Read_arg):
         Function_Search_normal(g, sc, read_args.algorithm)
     elif read_args.level == Level.pickup_points.value:
         Function_Search_Pickup_points(g, sc)
-    # elif read_args.level == Level.moving_polygon.value:
-    #     Function_Search_moving_polygon(g, sc, read_args.algorithm)
+
 
 # đổi không gian hiển thị (space = 2D / 3D)
 def Change_space(g: Grid, sc: pygame.surface, space:str):
@@ -159,6 +158,8 @@ def Function_Search_normal(g: Grid, sc: pygame.Surface, algorithm: str):
 
 # Chức năng tìm đường đi ngắn nhất đi qua tất cả điểm đón
 def Function_Search_Pickup_points(g: Grid, sc: pygame.Surface):
+    if g.pickup_points == [] or len(g.pickup_points) <=0:
+        raise NotImplementedError(f"Can't search for pickup points")
     # vẽ các điểm đón lên màn hình
     g.draw_pickup_points(sc)
     
