@@ -277,7 +277,7 @@ def show_cost(cost, sc: pygame.Surface):
     font = pygame.font.SysFont("Arial", 20)
 
     # Tạo text hiển thị chi phí
-    text = font.render(f"Cost: {cost:.2f}", True, WHITE)
+    text = font.render(f"Cost: {cost:.2f}", True, RED)
 
     # Vẽ text lên màn hình
     sc.blit(text, (10, 0))

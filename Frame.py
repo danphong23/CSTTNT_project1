@@ -5,7 +5,6 @@ from Grid import *
 from Find_the_shortest_route_through_pickup_points import *
 import pygame
 from queue import Queue
-from PathFinder import *
 
 class Frame: 
     def __init__(self, space: Grid, sc: pygame.Surface) -> None:
@@ -76,7 +75,7 @@ class Frame:
 
 
 # Tìm đường đi mới
-def find_new_path(queue_request, queue_response, space: Grid, sc):
+def find_new_path(queue_request: Queue, queue_response: Queue, space: Grid, algorithm: str):
     while True:
         # Đợi yêu cầu tìm đường
         _ = queue_request.get()

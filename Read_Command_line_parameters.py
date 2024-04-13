@@ -4,6 +4,15 @@ from Grid import *
 from Cell import *
 from PathFinder import *
 from Find_the_shortest_route_through_pickup_points import *
+from Frame import *
+from ReadInput import InputData
+import threading
+
+# python main.py --level n/pk/mp [--algor BFS/DFS/UCS/AStar] [--space 2D/3D]
+# ex: python main.py --level n --algor BFS --space 3D
+# ở trong ô vuông có thể nhập hoặc không
+# nếu thuật toán không nhập mặc định là DFS
+# nếu không gian không nhập thì mặc định là 2D
 
 # định nghĩa một lớp Read_arg dùng để đọc tham số dòng lệnh.
 class Read_arg:
@@ -52,6 +61,7 @@ class Read_arg:
         self.level = args.level
         self.algorithm = args.algor
         self.space = args.space
+        print(args)
 
         # kiểm tra lỗi
         self.check_err()
@@ -73,6 +83,7 @@ class Read_arg:
     def check_err(self):
         try:
             self.check_level()
+            self.check_algorithm()
         except ValueError as e:
             raise NotImplementedError(e)
             
@@ -82,11 +93,28 @@ class Read_arg:
             l = Level(self.level)
         except ValueError:
             raise ValueError(f"Invalid level please select:\n normal = {Level.normal.value} \n pickup_points = {Level.pickup_points.value}\n moving_polygon = {Level.moving_polygon.value}")
+    def check_algorithm(self):
+        try:
+            l = Algor(self.algorithm)
+        except ValueError:
+            raise ValueError(f"Invalid algorithm:\n {Algor._member_names_}")
+
+    def check_space(self):
+        try:
+            l = Level(self.level)
+        except ValueError:
+            raise ValueError(f"Invalid level please select:\n normal = {Level.normal.value} \n pickup_points = {Level.pickup_points.value}\n moving_polygon = {Level.moving_polygon.value}")
 
 class Level(Enum):
     normal = 'n'
     pickup_points = 'pk'
     moving_polygon = 'mp'
+    
+class Algor(Enum):
+    DFS = 'DFS'
+    BFS = 'BFS'
+    UCS = 'UCS'
+    AStar = 'AStar'
 
 # chạy Mức độ
 def Level_implementation(g: Grid, sc: pygame.surface, read_args:Read_arg):
@@ -94,8 +122,8 @@ def Level_implementation(g: Grid, sc: pygame.surface, read_args:Read_arg):
         Function_Search_normal(g, sc, read_args.algorithm)
     elif read_args.level == Level.pickup_points.value:
         Function_Search_Pickup_points(g, sc)
-    elif read_args.level == Level.moving_polygon.value:
-        print('nah!')
+    # elif read_args.level == Level.moving_polygon.value:
+    #     Function_Search_moving_polygon(g, sc, read_args.algorithm)
 
 # đổi không gian hiển thị (space = 2D / 3D)
 def Change_space(g: Grid, sc: pygame.surface, space:str):
@@ -144,7 +172,3 @@ def Function_Search_Pickup_points(g: Grid, sc: pygame.Surface):
     # vẽ chi phí lên màn hình
     show_cost(cost, sc)
 
-# Chức năng tìm đường đi (algorithm = BFS, DFS, USC, AStar), với các đa giác di chuyển
-def Function_Search_moving_polygon(g: Grid, sc: pygame.Surface, algorithm: str):
-    # TODO
-    pass
