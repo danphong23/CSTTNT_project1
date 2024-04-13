@@ -1,4 +1,9 @@
 import argparse
+from enum import Enum
+from Grid import *
+from Cell import *
+from PathFinder import *
+from Find_the_shortest_route_through_pickup_points import *
 
 # định nghĩa một lớp Read_arg dùng để đọc tham số dòng lệnh.
 class Read_arg:
@@ -10,14 +15,15 @@ class Read_arg:
         # vd: Normal - BFS
         # vd: Find the shortest route through pickup points
         # vd: Moving Polygon - DFS
-        # vd: 3D - Astar
         self.name = ''
+
+        # không gian hiển thị (2D, 3D)
+        self.space = '2D'
 
         # mức độ:
         # normal = "n"
         # pickup_points = 'pk'
         # moving_polygon = "mp"
-        # three_dimensional_space = "3d"
         self.level = ''
 
         # tên thuật toán: BFS, DFS, UCS, AStar
@@ -27,8 +33,9 @@ class Read_arg:
         parser = argparse.ArgumentParser(description='Wayfinding robots')
 
         # Thêm tùy chọn dòng lệnh
-        parser.add_argument('--level', type=str, required=True, help='Level: : normal = n \n pickup_points = pk\n moving_polygon = mp\n three_dimensional_space = 3d',)
+        parser.add_argument('--level', type=str, required=True, help=f'Level: : normal = {Level.normal.value} \n pickup_points = {Level.pickup_points.value}\n moving_polygon = {Level.moving_polygon.value}')
         parser.add_argument('--algor', type=str, help='algorithm: DFS, BFS, UCS, AStar', default='DFS')
+        parser.add_argument('--space', type=str, help='space: 3D, 2D', default='2D')
 
 
         # Xử lý các đối số dòng lệnh
@@ -44,20 +51,23 @@ class Read_arg:
         # gán các giá trị:
         self.level = args.level
         self.algorithm = args.algor
+        self.space = args.space
 
         # kiểm tra lỗi
         self.check_err()
 
         # đặt tên chương trình
-        if self.level == Level.normal:
-            self.name = f"normal - {self.algorithm}"
-        elif self.level == Level.pickup_points:
-            self.name = "Find the shortest route through pickup points"
-        elif self.level == Level.moving_polygon:
-            self.name = f"Moving polygon - {self.algorithm}"
-        elif self.level == Level.three_dimensional_space:
-            self.name = f"3D  - {self.algorithm}"
+        self.name = self.get_name()
         
+    
+    # lấy tên chương trình:
+    def get_name(self):
+        if self.level == Level.normal.value:
+            return f'normal - {self.algorithm}'
+        elif self.level == Level.pickup_points.value:
+            return 'Find the shortest route through pickup points'
+        elif self.level == Level.moving_polygon.value:
+            return f'Moving polygon - {self.algorithm}'
         
     # hàm kiểm tra lỗi các biến
     def check_err(self):
@@ -71,11 +81,70 @@ class Read_arg:
         try:
             l = Level(self.level)
         except ValueError:
-            raise ValueError("Invalid level please select: normal = n \n pickup_points = pk\n moving_polygon = mp\n three_dimensional_space = 3d")
+            raise ValueError(f"Invalid level please select:\n normal = {Level.normal.value} \n pickup_points = {Level.pickup_points.value}\n moving_polygon = {Level.moving_polygon.value}")
 
+class Level(Enum):
+    normal = 'n'
+    pickup_points = 'pk'
+    moving_polygon = 'mp'
 
-class Level(enumerate):
-    normal = "n"
-    pickup_points = "pk"
-    moving_polygon = "r"
-    three_dimensional_space = "3d"
+# chạy Mức độ
+def Level_implementation(g: Grid, sc: pygame.surface, read_args:Read_arg):
+    if read_args.level == Level.normal.value:
+        Function_Search_normal(g, sc, read_args.algorithm)
+    elif read_args.level == Level.pickup_points.value:
+        Function_Search_Pickup_points(g, sc)
+    elif read_args.level == Level.moving_polygon.value:
+        print('nah!')
+
+# đổi không gian hiển thị (space = 2D / 3D)
+def Change_space(g: Grid, sc: pygame.surface, space:str):
+    if space == '2D':
+        # TODO
+        pass
+    elif space == '3D':
+        # TODO
+        pass
+
+# chức năng tìm đường đi (algorithm = BFS, DFS, USC, AStar)
+def Function_Search_normal(g: Grid, sc: pygame.Surface, algorithm: str):
+    # path = find_path_with_pickup_points_using_matching(g, g.Start, g.Goal, g.pickup_points)
+    path = []
+    if(algorithm == 'DFS'):
+        path = DFS(g, g.Start, g.Goal)
+    elif(algorithm == 'BFS'):
+        path = BFS(g, g.Start, g.Goal)
+    elif(algorithm == 'UCS'):
+        path = UCS(g, g.Start, g.Goal)
+    elif(algorithm == 'AStar'):
+        path = AStar(g, g.Start, g.Goal)
+    else:
+        path = DFS(g, g.Start, g.Goal)
+
+    # thực hiện vẽ đường đi ở đây
+    draw_path(g, sc, path, YELLOW)  # Vẽ đường đi
+    # tính chi phí đường đi
+    cost = calculate_cost(g, path)
+
+    # vẽ chi phí lên màn hình
+    show_cost(cost, sc)
+
+# Chức năng tìm đường đi ngắn nhất đi qua tất cả điểm đón
+def Function_Search_Pickup_points(g: Grid, sc: pygame.Surface):
+    # vẽ các điểm đón lên màn hình
+    g.draw_pickup_points(sc)
+    
+    # thực hiện tìm đường đi
+    path = find_path_with_pickup_points_using_matching(g, g.Start, g.Goal, g.pickup_points)
+    # thực hiện vẽ đường đi
+    draw_path(g, sc, path, YELLOW)  # Vẽ đường đi
+    # tính chi phí đường đi
+    cost = calculate_cost(g, path)
+
+    # vẽ chi phí lên màn hình
+    show_cost(cost, sc)
+
+# Chức năng tìm đường đi (algorithm = BFS, DFS, USC, AStar), với các đa giác di chuyển
+def Function_Search_moving_polygon(g: Grid, sc: pygame.Surface, algorithm: str):
+    # TODO
+    pass
