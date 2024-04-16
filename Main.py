@@ -32,7 +32,7 @@ def main(data: InputData, read_args: Read_arg):
     Change_space(g, sc, read_args.space)
 
     q = Queue()
-    result = None
+    result = None   
     # gọi đa nhiệm chạy mức độ chương trình
     thread0 = threading.Thread(target=Level_implementation(g, sc, read_args, q))
     thread0.start()
