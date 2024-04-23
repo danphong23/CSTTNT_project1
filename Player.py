@@ -105,13 +105,14 @@ class Player:
                     
                     depth *= math.cos(self.angle_rad() - start_angle)
                     
-                    intensity = 128 / (1 + depth * depth * 0.0001)  # Adjust 128 to change the intensity
+                    intensity = 512 / (1 + depth * depth * 0.0001)  # Adjust 128 to change the intensity
                     # Create the custom color using the base (128, 128, 64) and the calculated intensity
                     
                     color = (min(26 + intensity, 255), min(44 + intensity, 193), min(66 + intensity, 162))
                     wall_height = 21000 / (depth + 0.0001)
+                    # wall_height = self.data.Num_Hight
                     
-                    pygame.draw.rect(surface, color, (self.data.SCREEN_WIDTH + ray * (SCALE - 1), (self.data.SCREEN_HEIGHT / 2) - wall_height / 2, SCALE, wall_height)) # trừ 1 do có kẽ hở
+                    pygame.draw.rect(surface, color, (self.data.SCREEN_WIDTH + ray * (SCALE) -1, (self.data.SCREEN_HEIGHT / 2) - wall_height / 2, SCALE + 1, wall_height)) # trừ 1 do có kẽ hở
                     
                     break
         

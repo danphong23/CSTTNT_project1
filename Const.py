@@ -1,5 +1,5 @@
 # Hằng số
-SCREEN_WIDTH_MAX = 900
+SCREEN_WIDTH_MAX = 800
 SCREEN_HEIGHT_MAX = 700
 CELL_SPACING = 1  # Khoảng cách giữa hai ô vuông (cell)
 

@@ -264,8 +264,9 @@ def calculate_cost(g:Grid, path):
 
     return cost
 
+import re
 # hàm hiển thị chi phí từ đầu đến đích
-def show_cost(cost, sc: pygame.Surface):
+def show_cost(cost):
     """
     Cập nhật chi phí đường đi lên màn hình.
 
@@ -273,14 +274,21 @@ def show_cost(cost, sc: pygame.Surface):
         sc: Màn hình pygame để vẽ.
         cost: Chi phí đường đi.
     """
-    # Cài đặt font chữ
-    font = pygame.font.SysFont("Arial", 20)
+    cap = pygame.display.get_caption()[0]
+    # Tìm kiếm chuỗi cost hiện tại trong tiêu đề
+    cost_pattern = r" - Cost: (\d+\.\d+)"  # Biểu thức regex
+    match = re.search(cost_pattern, cap)
 
-    # Tạo text hiển thị chi phí
-    text = font.render(f"Cost: {cost:.2f}", True, WHITE)
+    # Tạo chuỗi cost mới
+    new_cost_str = f" - Cost: {cost:.2f}"
 
-    # Vẽ text lên màn hình
-    sc.blit(text, (10, 0))
+    # Cập nhật chuỗi cost nếu tìm thấy khớp
+    if match:
+        new_caption = cap.replace(match.group(1), f'{cost:.1f}')  # Thay thế cost hiện tại
+    else:
+        new_caption = cap + new_cost_str  # Thêm cost mới
 
-    # Cập nhật màn hình
+    # pygame.display.set_caption(cap + f" - Cost: {cost:.2f}")
+    pygame.display.set_caption(new_caption)
+
     pygame.display.flip()

@@ -158,9 +158,15 @@ class Grid:
         Args:
             cell: Ô mới.
         """
+        cost = 1.5
+        if self.Start.rect.x == cell.rect.x or self.Start.rect.y == cell.rect.y:
+            cost = 1.0
+
         self.Start._set_color(WHITE)
         self.Start = cell
         self.Start._set_color(GREEN)
+        
+        return cost
 
     def arrived_goal(self, cell: Cell):
         """

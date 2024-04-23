@@ -13,6 +13,7 @@ class Frame:
         self.sc = sc
         self.time_out = 0
         self.previous_positon = space.Start
+        self.cost = 0
 
     def update_new_frame(self):
         for polygon in self.space.Polygons.polygons:
@@ -58,11 +59,13 @@ class Frame:
             self.previous_positon = cell
             if self.space.arrived_goal(cell):
                 self.space.update_start(cell)
+                show_cost(self.cost)
                 self.space.draw(self.sc)
                 return "arrived"
             self.space.arraived_pickup_point(cell)
             if cell.passable:
-                self.space.update_start(cell)
+                self.cost += self.space.update_start(cell)
+                show_cost(self.cost)
                 path.pop(1)
                 self.space.draw(self.sc)
                 return True
@@ -76,15 +79,24 @@ class Frame:
 
 
 # Tìm đường đi mới
-def find_new_path(queue_request, queue_response, space: Grid, sc):
+def find_new_path(queue_request: Queue, queue_response: Queue, g: Grid, algorithm: str):
     while True:
         # Đợi yêu cầu tìm đường
         _ = queue_request.get()
 
         path = []
-        path = AStar(space, space.Start, space.Goal)
-        #path = find_path_with_pickup_points_using_matching(space, space.Start, space.Goal, space.pickup_points)
-
+        # path = AStar(g, g.Start, g.Goal)
+        #path = find_path_with_pickup_points_using_matching(g, g.Start, g.Goal, space.pickup_points)
+        if(algorithm == 'DFS'):
+            path = DFS(g, g.Start, g.Goal)
+        elif(algorithm == 'BFS'):
+            path = BFS(g, g.Start, g.Goal)
+        elif(algorithm == 'UCS'):
+            path = UCS(g, g.Start, g.Goal)
+        elif(algorithm == 'AStar'):
+            path = AStar(g, g.Start, g.Goal)
+        else:
+            path = DFS(g, g.Start, g.Goal)
         # Trả về đường đi
         queue_response.put(path)
 

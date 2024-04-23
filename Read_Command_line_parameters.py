@@ -5,6 +5,8 @@ from Cell import *
 from PathFinder import *
 from Find_the_shortest_route_through_pickup_points import *
 from queue import Queue
+from Player import Player
+import sys
 
 # định nghĩa một lớp Read_arg dùng để đọc tham số dòng lệnh.
 class Read_arg:
@@ -45,9 +47,6 @@ class Read_arg:
         # gán giá trị vào các biến
         self.init(args)
 
-
-    
-
     def init(self, args):
         # gán các giá trị:
         self.level = args.level
@@ -64,11 +63,11 @@ class Read_arg:
     # lấy tên chương trình:
     def get_name(self):
         if self.level == Level.normal.value:
-            return f'normal - {self.algorithm}'
+            return f'normal - {self.algorithm} - {self.space}'
         elif self.level == Level.pickup_points.value:
-            return 'Find the shortest route through pickup points'
+            return f'Find the shortest route through pickup points - {self.space}'
         elif self.level == Level.moving_polygon.value:
-            return f'Moving polygon - {self.algorithm}'
+            return f'Moving polygon - {self.algorithm} - {self.space}'
         
     # hàm kiểm tra lỗi các biến
     def check_err(self):
@@ -76,13 +75,21 @@ class Read_arg:
             self.check_level()
         except ValueError as e:
             raise NotImplementedError(e)
-            
 
     def check_level(self):
         try:
             l = Level(self.level)
         except ValueError:
             raise ValueError(f"Invalid level please select:\n normal = {Level.normal.value} \n pickup_points = {Level.pickup_points.value}\n moving_polygon = {Level.moving_polygon.value}")
+
+    def check_space(self):
+        try:
+            l = Level(self.level)
+        except ValueError:
+            raise ValueError(f"Invalid level please select:\n normal = {Level.normal.value} \n pickup_points = {Level.pickup_points.value}\n moving_polygon = {Level.moving_polygon.value}")
+
+    def is_3D(self):
+        return self.space == '3D'
 
 class Level(Enum):
     normal = 'n'
@@ -95,13 +102,6 @@ class Algor(Enum):
     UCS = 'UCS'
     AStar = 'AStar'
 
-# # chạy Mức độ
-# def Level_implementation(g: Grid, sc: pygame.surface, read_args:Read_arg):
-#     if read_args.level == Level.normal.value:
-#         Function_Search_normal(g, sc, read_args.algorithm)
-#     elif read_args.level == Level.pickup_points.value:
-#         Function_Search_Pickup_points(g, sc)
-        
 # chạy Mức độ
 def Level_implementation(g: Grid, sc: pygame.surface, read_args:Read_arg, q: Queue):
     if read_args.level == Level.normal.value:
@@ -112,13 +112,37 @@ def Level_implementation(g: Grid, sc: pygame.surface, read_args:Read_arg, q: Que
     #     Function_Search_moving_polygon(g, sc, read_args.algorithm)
 
 # đổi không gian hiển thị (space = 2D / 3D)
-def Change_space(g: Grid, sc: pygame.surface, space:str):
+def Change_space(g:Grid, sc:pygame.surface, data:InputData, q:Queue, space:str='2D'):
     if space == '2D':
         # TODO
         pass
     elif space == '3D':
-        # TODO
-        pass
+        result = None
+        player = Player(data, g)
+        # Xử lý sự kiện
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+            
+            sc.fill(pygame.color.Color((133, 251, 253)))
+            pygame.draw.rect(sc, BLACK, (data.SCREEN_WIDTH, 0, data.SCREEN_WIDTH, data.SCREEN_HEIGHT // 2))
+            g.draw(sc)
+
+            if result == None:
+                if not q.empty():
+                    result = q.get_nowait()
+                    player.set_path(result)
+                    # Tạo text hiển thị chi phí
+                    #text = font.render(f"Cost: {result[1]:.2f}", True, BLACK)
+                else:
+                    break
+            else:
+                player.update()
+                player.draw(sc)
+
+            pygame.display.flip()
 
 # chức năng tìm đường đi (algorithm = BFS, DFS, USC, AStar)
 def Function_Search_normal(g: Grid, sc: pygame.Surface, algorithm: str):
@@ -141,7 +165,7 @@ def Function_Search_normal(g: Grid, sc: pygame.Surface, algorithm: str):
     cost = calculate_cost(g, path)
 
     # vẽ chi phí lên màn hình
-    show_cost(cost, sc)
+    show_cost(cost)
     return path
 
 # Chức năng tìm đường đi ngắn nhất đi qua tất cả điểm đón
@@ -159,7 +183,7 @@ def Function_Search_Pickup_points(g: Grid, sc: pygame.Surface):
     cost = calculate_cost(g, path)
 
     # vẽ chi phí lên màn hình
-    show_cost(cost, sc)
+    show_cost(cost)
     return path
 
 # # Chức năng tìm đường đi (algorithm = BFS, DFS, USC, AStar), với các đa giác di chuyển
