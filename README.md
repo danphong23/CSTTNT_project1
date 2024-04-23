@@ -3,3 +3,7 @@ https://studenthcmusedu-my.sharepoint.com/:w:/g/personal/21120526_student_hcmus_
 
 hướng dẫn sử dụng chương trình:
 https://studenthcmusedu-my.sharepoint.com/:w:/g/personal/21120526_student_hcmus_edu_vn/ERIkq_I2eD1PobY41pWDi1oBrxOwz-BxyxzBvcazIRSuRA?e=79ml7S
+
+báo cáo:
+https://studenthcmusedu-my.sharepoint.com/:w:/g/personal/21120608_student_hcmus_edu_vn/EVgTGuVWeZtAnyHtz5oJOWMB-5HLyLMDnccYc2EvvM3STA?e=VJvrrp
+
