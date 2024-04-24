@@ -7,6 +7,9 @@ https://studenthcmusedu-my.sharepoint.com/:w:/g/personal/21120526_student_hcmus_
 báo cáo:
 https://studenthcmusedu-my.sharepoint.com/:w:/g/personal/21120608_student_hcmus_edu_vn/EVgTGuVWeZtAnyHtz5oJOWMB-5HLyLMDnccYc2EvvM3STA?e=VJvrrp
 
+video demo tìm đường đi trong trường hợp đa giác di chuyển:
+https://studenthcmusedu-my.sharepoint.com/:v:/g/personal/21120410_student_hcmus_edu_vn/EaYaYIKdUkNPgcV8GrjCnucBtTgTcEFsO80m-d_GTzF_lQ
+
 bản đồ không tìm được đường đi:
 22,18,20
 2,2,19,16,3,12,17,8,15,14
