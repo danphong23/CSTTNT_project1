@@ -132,6 +132,19 @@ class Polygon:
         x1 = p1[len(p1)//2] % self.width
         y1 = p1[len(p1)//2] // self.width
         seeds = self.points_in_line(self.points[0], (x1,y1))
+
+        for id in p1:
+            x1 = id % self.width
+            y1 = id // self.width
+            seeds = self.points_in_line(self.points[0], (x1,y1))
+        
+            for seed in seeds:
+                x = seed % self.width
+                y = seed // self.width
+
+                if Grid_cell[x + y * self.width].passable is not value:
+                    queue.append((x, y))
+                    # break
         
         for seed in seeds:
             x = seed % self.width
@@ -140,21 +153,22 @@ class Polygon:
             if Grid_cell[x + y * self.width].passable is not value:
                 queue.append((x, y))
                 break
-
+        
         # Lặp lại cho đến khi không còn điểm nào trong danh sách cần kiểm tra
         while len(queue) > 0:
             # Lấy điểm đầu tiên trong danh sách cần kiểm tra
             point = queue.pop(0)
-            if Grid_cell[point[0] + point[1] * self.width].passable is not value:
+            id = point[0] + point[1] * self.width
+            if Grid_cell[id].passable is value:
                 continue
 
             # Đánh dấu điểm đã được thăm
-            Grid_cell[point[0] + point[1] * self.width].set_passable(value)
-            self.inside_points_ids.append(point[0] + point[1] * self.width)
-            #Grid_cell[point[0] + point[1] * self.width]._set_color(BLACK)
+            Grid_cell[id].set_passable(value)
+            # Grid_cell[id]._set_color(GREY)
+            self.inside_points_ids.append(id)
 
             # Kiểm tra các điểm lân cận
-            for dx, dy in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
+            for (dx, dy) in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
                 x = point[0] + dx
                 y = point[1] + dy
 

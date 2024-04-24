@@ -5,6 +5,7 @@ from Polygon import *
 from Grid import *
 from Cell import *
 import heapq
+import sys
 
 # tìm kiếm theo chiều rộng trả về danh sách đường đi
 def BFS(g: Grid, Start: Cell, Goal: Cell):
